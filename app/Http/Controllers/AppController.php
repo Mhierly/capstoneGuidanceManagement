@@ -116,15 +116,15 @@ class AppController extends Controller
         $student = $this->getStudentData(Auth::user()->id);
         $appointments = [];
         $goodMoral = [];
-        $droppingForm = [];
+        $dropList = [];
         if ($student) {
             //return $student;
             $appointments = $student->listOfAppoitments;
-            $user_appointments = Appointments::where('student_id', $student->id)->orderBy('created_at', 'desc')->get();
+            $dropList = $student->dropRequest;
         } else {
             return redirect(route('user.viewProfile'));
         }
-        return view('user.request_forms.request_forms', compact('status', 'subjects', 'appointments'));
+        return view('user.request_forms.request_forms', compact('status', 'subjects', 'appointments', 'dropList'));
     }
     public function viewFormAppointment()
     {

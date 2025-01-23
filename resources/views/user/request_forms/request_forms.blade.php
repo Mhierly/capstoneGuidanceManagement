@@ -1,6 +1,14 @@
 @extends('layouts.app')
 @section('title-page', 'Request Forms')
 @section('content')
+    <style>
+        .table-container {
+            width: 100%;
+            overflow: hidden;
+        }
+
+       
+    </style>
     <div class="container">
         <h1 class="text-primary fw-bolder">REQUEST FORMS</h1>
         <div class="row">
@@ -14,7 +22,7 @@
                             class="btn {{ request()->input('form') == 'appointment' ? ' btn-primary' : 'btn-outline-primary' }} btn-sm mt-2 w-100">
                             APPOINTMENT
                         </a>
-                        <a href="{{ route('user.viewFormDrop') }}"
+                        <a href="{{ route('user.viewForm', ['form' => 'dropping-form']) }}"
                             class="btn {{ request()->input('form') == 'dropping-form' ? ' btn-primary' : 'btn-outline-primary' }} btn-sm mt-2 w-100">
                             DROPPING FORM
                         </a>
@@ -28,6 +36,8 @@
             <div class="col-md">
                 @if (request()->input('form') == 'appointment')
                     @include('user.request_forms.component.appointment')
+                @elseif(request()->input('form') == 'dropping-form')
+                    @include('user.request_forms.component.droppingForm')
                 @elseif(request()->input('form') == 'good-moral')
                 @else
                     @include('user.request_forms.component.appointment')
@@ -36,6 +46,11 @@
             </div>
         </div>
     </div>
+    @include('layouts.loading')
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script>
         $(document).on('click', '.cancel_request', function() {
             var id = $(this).data('value');
@@ -85,6 +100,9 @@
             });
         })
         $(document).ready(function() {
+            $('#dropList').dataTable({
+                "scrollX": true
+            });
             @if (session('error_request'))
                 Swal.fire({
                     icon: 'error',

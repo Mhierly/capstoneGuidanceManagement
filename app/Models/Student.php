@@ -46,7 +46,11 @@ class Student extends Model
     ];
     function listOfAppoitments()
     {
-        return $this->hasMany(Appointments::class, 'student_id');
+        return $this->hasMany(Appointments::class, 'student_id')->orderBy('status', 'desc')->orderBy('appointment_id', 'desc');
+    }
+    function dropRequest()
+    {
+        return $this->hasMany(Drops::class, 'student_id')->orderBy('status', 'desc')->orderBy('drop_request_id', 'desc');
     }
 }
 

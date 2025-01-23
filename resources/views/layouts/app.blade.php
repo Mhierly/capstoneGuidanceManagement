@@ -93,12 +93,12 @@
                                 <span>{{ __('Request Forms') }}</span>
                             </a>
                         </li>
-                        <li class="sidebar-item {{ $currentRoute == 'user.viewAppointments' ? 'active' : '' }}">
+                        {{--  <li class="sidebar-item {{ $currentRoute == 'user.viewAppointments' ? 'active' : '' }}">
                             <a class="sidebar-link" href="{{ route('user.viewAppointments') }}">
                                 <i class="bi bi-calendar-check-fill"></i>
                                 <span>{{ __('My Appointments') }}</span>
                             </a>
-                        </li>
+                        </li> --}}
                         <li class="sidebar-item {{ $currentRoute == 'user.viewReportForm' ? 'active' : '' }}">
                             <a class="sidebar-link" href="{{ route('user.viewReportForm') }}">
                                 <i class="bi bi-exclamation-triangle-fill"></i>

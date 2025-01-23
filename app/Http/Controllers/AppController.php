@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Appointments;
 use Illuminate\Http\Request;
 use App\Models\Student;
 use Illuminate\Support\Facades\Auth;
@@ -25,14 +26,20 @@ class AppController extends Controller
         //     return $response;
         // });
     }
+    protected function getStudentData($user_id)
+    {
+        return $student = Student::where('user_id', $user_id)->first();
+    }
 
-    public function viewDashboard(){
+    public function viewDashboard()
+    {
         $status = $this->checkIfDrop();
 
         return view('user.user_home', ['status' => $status]);
     }
 
-    public function viewReportForm(){
+    public function viewReportForm()
+    {
         $student = Student::where('user_id', Auth::user()->id)->first();
         $grades = DB::table('grade_level')->get();
         $advisers = DB::table('advisers')->get();
@@ -41,15 +48,18 @@ class AppController extends Controller
         return view('user.user_report_form', ['student' => $student, 'grades' => $grades, 'advisers' => $advisers, 'status' => $status]);
     }
 
-    public function viewAppointments(){
+    public function viewAppointments()
+    {
         return view('user.user_appointments');
     }
 
-    public function viewCOC(){
+    public function viewCOC()
+    {
         return view('user.user_coc');
     }
 
-    public function viewProfile() {
+    public function viewProfile()
+    {
         $student = Student::where('user_id', Auth::user()->id)->first();
 
         $profile_img = $student->student_img == null ? asset('img/default.jpg') : route('student.image', ['id' => $student->id]);
@@ -74,42 +84,71 @@ class AppController extends Controller
             'barangay' => DB::table('philippine_barangays')->where('barangay_code', $student->baranggay)->value('barangay_description') ?? '(UPDATE)',
         ];
 
-        return view('user.user_profile',
-                    [
-                        'profile_img' => $profile_img,
-                        'student' => $student,
-                        'student_address' => $student_address,
-                        'current_grade' => $current_grade,
-                        'current_section' => $current_section,
-                        'formatted_date' => $formattedDate,
-                        'student_age' => $student_age,
-                        'current_year' => $currentYear,
-                        'adviser' => $adviser,
-                        'grade_levels' => $grade_levels,
-                        'sections' => $sections,
-                        'advisers' => $advisers
-                    ]);
+        return view(
+            'user.user_profile',
+            [
+                'profile_img' => $profile_img,
+                'student' => $student,
+                'student_address' => $student_address,
+                'current_grade' => $current_grade,
+                'current_section' => $current_section,
+                'formatted_date' => $formattedDate,
+                'student_age' => $student_age,
+                'current_year' => $currentYear,
+                'adviser' => $adviser,
+                'grade_levels' => $grade_levels,
+                'sections' => $sections,
+                'advisers' => $advisers
+            ]
+        );
     }
-
-    public function viewFormAppointment(){
+    function viewForm()
+    {
+        $status = $this->checkUserAvailability();
+        $subjects = array(
+            'Academic Concerns',
+            'Career Planning',
+            'Personal Issues',
+            'Behavioral Support',
+            'Policies & Procedures',
+            'Specialized Support',
+        );
+        $student = $this->getStudentData(Auth::user()->id);
+        $appointments = [];
+        $goodMoral = [];
+        $droppingForm = [];
+        if ($student) {
+            //return $student;
+            $appointments = $student->listOfAppoitments;
+            $user_appointments = Appointments::where('student_id', $student->id)->orderBy('created_at', 'desc')->get();
+        } else {
+            return redirect(route('user.viewProfile'));
+        }
+        return view('user.request_forms.request_forms', compact('status', 'subjects', 'appointments'));
+    }
+    public function viewFormAppointment()
+    {
         $status = $this->checkUserAvailability();
 
         return view('user.request_forms.request_appointment', ['status' => $status]);
     }
 
-    public function viewFormDrop(){
+    public function viewFormDrop()
+    {
         $status = $this->checkUserAvailability();
 
         return view('user.request_forms.request_dropform', ['status' => $status]);
     }
 
-    public function viewFormMoral(){
+    public function viewFormMoral()
+    {
         $status = $this->checkUserAvailability();
 
         return view('user.request_forms.request_goodmoral', ['status' => $status]);
     }
 
-    private function checkUserAvailability(){
+    private function checkUserAvailability()
+    {
         $student = Student::where('user_id', Auth::user()->id)->first();
         $status = "Complete";
         if ($student) {
@@ -124,7 +163,8 @@ class AppController extends Controller
         return $status;
     }
 
-    private function checkIfDrop(){
+    private function checkIfDrop()
+    {
         $student = Student::where('user_id', Auth::user()->id)->first();
 
         $status = $student->student_status;
@@ -159,5 +199,4 @@ class AppController extends Controller
 
         return response()->json($sections);
     }
-
 }

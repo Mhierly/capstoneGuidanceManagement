@@ -20,11 +20,13 @@ use Carbon\Carbon;
 
 class RequestController extends Controller
 {
-    protected function getStudentData($user_id){
+    protected function getStudentData($user_id)
+    {
         return $student = Student::where('user_id', $user_id)->first();
     }
 
-    public function submitAppointmentRequest(Request $request){
+    public function submitAppointmentRequest(Request $request)
+    {
 
         $rules = [
             'appointmentDate' => 'required|date|after_or_equal:today',
@@ -69,7 +71,7 @@ class RequestController extends Controller
             'appointment_time_from' => $request->input('durationFrom'),
             'appointment_time_to' => $request->input('durationTo'),
             'duration' => $totalMinutes,
-        	'subject' => $request->input('subject'),
+            'subject' => $request->input('subject'),
             'status' => 1,
             'reason' => $request->input('reason'),
             'counselor_id' => 1,
@@ -88,27 +90,65 @@ class RequestController extends Controller
             $status = RequestHistory::create($history);
 
             $email_data = [
-                'subject' => 'New appointment request - Number (#'.$appointment->id.')',
+                'subject' => 'New appointment request - Number (#' . $appointment->id . ')',
                 'email_header' => 'New appointment request!',
-                'email_description' => 'Good day counselor! New appointment requested by '. $student->firstname. ' ' . $student->lastname . ' (' . $student->email . '). Thank you!',
-                'email_notes' => 'Schedule: '. $appointment->appointment_date . ' (' . $appointment->appointment_time_from . ' - ' . $appointment->appointment_time_to . ')',
+                'email_description' => 'Good day counselor! New appointment requested by ' . $student->firstname . ' ' . $student->lastname . ' (' . $student->email . '). Thank you!',
+                'email_notes' => 'Schedule: ' . $appointment->appointment_date . ' (' . $appointment->appointment_time_from . ' - ' . $appointment->appointment_time_to . ')',
             ];
 
             $this->mailRequest($email_data);
 
             return redirect()->back()->with(['success_request' => 'You request has been submitted. Please wait for the counselor response.']);
-
         } catch (Exception $e) {
             // Log the exception or perform error handling
             $error = ('Error inserting: ' . $e->getMessage());
 
             return redirect()->back()->with(['error_request' => $error]);
         }
-
-
     }
+    function submitAppointmentRequestV2(Request $request)
+    {
+        $request->validate([
+            'subject' => 'required',
+            'reason' => 'required'
+        ]);
+        try {
+            return $request;
+            $student = $this->getStudentData(Auth::user()->id);
+            $appointmentData = [
+                'student_id' => $student->id,
+                'subject' => $request->input('subject'),
+                'reason' => $request->input('reason'),
+                'counselor_id' => 1,
+            ];
+            $appointment = Appointments::create($appointmentData);
 
-    public function submitDropRequest(Request $request){
+            $history = [
+                'request_type' => 2,
+                'request_id' => $appointment->id,
+                'student_id' => $student->id,
+            ];
+
+            $status = RequestHistory::create($history);
+
+            $email_data = [
+                'email' => 'detteramos12@gmail.com ',
+                'subject' => 'New appointment request - Number (#' . $appointment->id . ')',
+                'email_header' => 'New appointment request!',
+                'email_description' => 'Good day counselor! New appointment requested by ' . $student->firstname . ' ' . $student->lastname . ' (' . $student->email . '). Thank you!',
+                'email_notes' => 'Schedule: ' . $appointment->appointment_date . ' (' . $appointment->appointment_time_from . ' - ' . $appointment->appointment_time_to . ')',
+            ];
+
+            $this->mailRequestV2($email_data);
+
+            return redirect()->back()->with(['success_request' => 'You request has been submitted. Please wait for the counselor response.']);
+        } catch (\Throwable $th) {
+            $error = ('Error inserting: ' . $th->getMessage());
+            return redirect()->back()->with(['error_request' => $error]);
+        }
+    }
+    public function submitDropRequest(Request $request)
+    {
 
         $rules = [
             'requestDate' => 'required|date|after_or_equal:today',
@@ -131,7 +171,7 @@ class RequestController extends Controller
 
         $requestData = [
             'student_id' => $student->id,
-        	'request_date' => $request->input('requestDate'),
+            'request_date' => $request->input('requestDate'),
             'status' => 1,
             'reason' => $request->input('reason'),
             'counselor_id' => 1,
@@ -149,16 +189,15 @@ class RequestController extends Controller
             $status = RequestHistory::create($history);
 
             $email_data = [
-                'subject' => 'New student drop request - Number (#'.$request_drop->id.')',
+                'subject' => 'New student drop request - Number (#' . $request_drop->id . ')',
                 'email_header' => 'New student drop request!',
-                'email_description' => 'Good day counselor! New dropping request by '. $student->firstname. ' ' . $student->lastname . ' (' . $student->email . '). Thank you!',
+                'email_description' => 'Good day counselor! New dropping request by ' . $student->firstname . ' ' . $student->lastname . ' (' . $student->email . '). Thank you!',
                 'email_notes' => 'Student reason: ' . $request_drop->reason,
             ];
 
             $this->mailRequest($email_data);
 
             return redirect()->back()->with(['success_request' => 'You request has been submitted. Please wait for the counselor response.']);
-
         } catch (Exception $e) {
             // Log the exception or perform error handling
             $error = ('Error inserting: ' . $e->getMessage());
@@ -167,7 +206,8 @@ class RequestController extends Controller
         }
     }
 
-    public function submitMoralRequest(Request $request){
+    public function submitMoralRequest(Request $request)
+    {
 
         $rules = [
             'requestDate' => 'required|date|after_or_equal:today',
@@ -190,7 +230,7 @@ class RequestController extends Controller
 
         $requestData = [
             'student_id' => $student->id,
-        	'request_date' => $request->input('requestDate'),
+            'request_date' => $request->input('requestDate'),
             'status' => 1,
             'reason' => $request->input('reason'),
             'counselor_id' => 1,
@@ -208,26 +248,25 @@ class RequestController extends Controller
             $status = RequestHistory::create($history);
 
             $email_data = [
-                'subject' => 'New good moral request - Number (#'.$request_gm->id.')',
+                'subject' => 'New good moral request - Number (#' . $request_gm->id . ')',
                 'email_header' => 'New good moral request!',
-                'email_description' => 'Good day counselor! New good moral request by '. $student->firstname. ' ' . $student->lastname . ' (' . $student->email . '). Thank you!',
+                'email_description' => 'Good day counselor! New good moral request by ' . $student->firstname . ' ' . $student->lastname . ' (' . $student->email . '). Thank you!',
                 'email_notes' => 'Student reason: ' . $request_gm->reason,
             ];
 
             $this->mailRequest($email_data);
 
             return redirect()->back()->with(['success_request' => 'You request has been submitted. Please wait for the counselor response.']);
-
         } catch (Exception $e) {
             // Log the exception or perform error handling
             $error = ('Error inserting: ' . $e->getMessage());
 
             return redirect()->back()->with(['error_request' => $error]);
         }
-
     }
 
-    public function submitReportRequest(Request $request){
+    public function submitReportRequest(Request $request)
+    {
 
         $student = $this->getStudentData(Auth::user()->id);
 
@@ -243,16 +282,15 @@ class RequestController extends Controller
             $status = RequestHistory::create($history);
 
             $email_data = [
-                'subject' => 'New student concern - Number (#'.$request_concern->id.')',
+                'subject' => 'New student concern - Number (#' . $request_concern->id . ')',
                 'email_header' => 'New student concern!',
-                'email_description' => 'Good day counselor! New student concern submitted by '. $student->firstname. ' ' . $student->lastname . ' (' . $student->email . '). Thank you!',
+                'email_description' => 'Good day counselor! New student concern submitted by ' . $student->firstname . ' ' . $student->lastname . ' (' . $student->email . '). Thank you!',
                 'email_notes' => 'Student reason: ' . $request_concern->main_concern,
             ];
 
             $this->mailRequest($email_data);
 
             return redirect()->back()->with(['success_request' => 'You concern has been submitted. Please wait for the counselor response.']);
-
         } catch (Exception $e) {
             // Log the exception or perform error handling
             $error = ('Error inserting: ' . $e->getMessage());
@@ -261,7 +299,8 @@ class RequestController extends Controller
         }
     }
 
-    public function cancelRequest(Request $request) {
+    public function cancelRequest(Request $request)
+    {
         $student = $this->getStudentData(Auth::user()->id);
         $request_id = $request->input('id');
         $request_type = $request->input('request_type');
@@ -275,9 +314,9 @@ class RequestController extends Controller
                     ->update(['status' => 2]);
 
                 $email_data = [
-                    'subject' => 'Student appointment cancelled - Number (#'.$request_id.')',
+                    'subject' => 'Student appointment cancelled - Number (#' . $request_id . ')',
                     'email_header' => 'Appointment Cancelled!',
-                    'email_description' => 'Good day counselor! An appointment has been cancelled by '. $student->firstname. ' ' . $student->lastname . ' (' . $student->email . '). Thank you!',
+                    'email_description' => 'Good day counselor! An appointment has been cancelled by ' . $student->firstname . ' ' . $student->lastname . ' (' . $student->email . '). Thank you!',
                     'email_notes' => '',
                 ];
 
@@ -298,9 +337,9 @@ class RequestController extends Controller
                     ->update(['status' => 2]);
 
                 $email_data = [
-                    'subject' => 'Drop request cancelled - Number (#'.$request_id.')',
+                    'subject' => 'Drop request cancelled - Number (#' . $request_id . ')',
                     'email_header' => 'Drop Request Cancelled!',
-                    'email_description' => 'Good day counselor! A drop request has been cancelled by '. $student->firstname. ' ' . $student->lastname . ' (' . $student->email . '). Thank you!',
+                    'email_description' => 'Good day counselor! A drop request has been cancelled by ' . $student->firstname . ' ' . $student->lastname . ' (' . $student->email . '). Thank you!',
                     'email_notes' => '',
                 ];
 
@@ -322,9 +361,9 @@ class RequestController extends Controller
                     ->update(['status' => 2]);
 
                 $email_data = [
-                    'subject' => 'Good moral request cancelled - Number (#'.$request_id.')',
+                    'subject' => 'Good moral request cancelled - Number (#' . $request_id . ')',
                     'email_header' => 'Good Moral Request Cancelled!',
-                    'email_description' => 'Good day counselor! Good moral request has been cancelled by '. $student->firstname. ' ' . $student->lastname . ' (' . $student->email . '). Thank you!',
+                    'email_description' => 'Good day counselor! Good moral request has been cancelled by ' . $student->firstname . ' ' . $student->lastname . ' (' . $student->email . '). Thank you!',
                     'email_notes' => '',
                 ];
 
@@ -340,16 +379,26 @@ class RequestController extends Controller
         return response()->json(['error' => 'Invalid request type.'], 400);
     }
 
-    private function mailRequest($data){
+    private function mailRequest($data)
+    {
         $layout = 'mail_layout.request_update_email';
         $subject = $data['subject'];
 
         try {
-            Mail::to('bongabonhs@gmail.com')->send(new Mailer($data, $layout, $subject));
-
+            Mail::to('banting.percival17@gmail.com')->send(new Mailer($data, $layout, $subject));
         } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+    private function mailRequestV2($data)
+    {
+        $layout = 'mail_layout.request_update_email';
+        $subject = $data['subject'];
 
+        try {
+            Mail::to($data['email'])->send(new Mailer($data, $layout, $subject));
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }

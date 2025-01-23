@@ -91,29 +91,29 @@ Route::middleware(['auth', 'userAuth:1', 'preventBackHistory'])->group(function 
     Route::post('/admin/student/email', [StudentListController::class, 'sendEMail'])->name('admin.student.email');
     Route::get('/admin/student/pdf/information', [StudentListController::class, 'downloadStudentInfo'])->name('admin.student.pdf.information');
 
-     //locations
-     Route::get('/admin/getProvinces', [AppController::class, 'getProvinces'])->name('fetch.admin.location.provinces');
-     Route::get('/admin/getCities/{province_code}', [AppController::class, 'getCities'])->name('fetch.admin.location.cities');
-     Route::get('/admin/getBarangays/{province_code}/{city_code}', [AppController::class, 'getBarangays'])->name('fetch.admin.location.barangays');
+    //locations
+    Route::get('/admin/getProvinces', [AppController::class, 'getProvinces'])->name('fetch.admin.location.provinces');
+    Route::get('/admin/getCities/{province_code}', [AppController::class, 'getCities'])->name('fetch.admin.location.cities');
+    Route::get('/admin/getBarangays/{province_code}/{city_code}', [AppController::class, 'getBarangays'])->name('fetch.admin.location.barangays');
 
-     //student reports functions
-     Route::get('fetch-report-information', [ReportListController::class, 'fetchReportInformation'])->name('fetch.report.information');
-     Route::post('/admin/student/report/action', [ReportListController::class, 'updateStudentConcern'])->name('admin.student.concern.action');
-     Route::post('/admin/student/report/status', [ReportListController::class, 'updateConcernStatus'])->name('admin.student.concern.status');
-     Route::get('/admin/student/report/download', [ReportListController::class, 'downloadConcernInformation'])->name('admin.student.concern.download');
-     Route::post('/admin/student/report/remove', [ReportListController::class, 'removeStudentConcern'])->name('admin.student.concern.remove');
+    //student reports functions
+    Route::get('fetch-report-information', [ReportListController::class, 'fetchReportInformation'])->name('fetch.report.information');
+    Route::post('/admin/student/report/action', [ReportListController::class, 'updateStudentConcern'])->name('admin.student.concern.action');
+    Route::post('/admin/student/report/status', [ReportListController::class, 'updateConcernStatus'])->name('admin.student.concern.status');
+    Route::get('/admin/student/report/download', [ReportListController::class, 'downloadConcernInformation'])->name('admin.student.concern.download');
+    Route::post('/admin/student/report/remove', [ReportListController::class, 'removeStudentConcern'])->name('admin.student.concern.remove');
 
-     //student drop functions
-     Route::post('/admin/student/drop/approve', [DropListController::class, 'approveDropItem'])->name('admin.student.drop.approve');
-     Route::post('/admin/student/drop/status', [DropListController::class, 'updateDropStatus'])->name('admin.student.drop.status');
-     Route::post('/admin/student/drop/download', [DropListController::class, 'downloadDropForm'])->name('admin.student.drop.download');
-     Route::post('/admin/student/drop/archive', [DropListController::class, 'archiveDropItem'])->name('admin.student.drop.archive');
+    //student drop functions
+    Route::post('/admin/student/drop/approve', [DropListController::class, 'approveDropItem'])->name('admin.student.drop.approve');
+    Route::post('/admin/student/drop/status', [DropListController::class, 'updateDropStatus'])->name('admin.student.drop.status');
+    Route::post('/admin/student/drop/download', [DropListController::class, 'downloadDropForm'])->name('admin.student.drop.download');
+    Route::post('/admin/student/drop/archive', [DropListController::class, 'archiveDropItem'])->name('admin.student.drop.archive');
 
-     //student good moral functions
-     Route::post('/admin/student/goodmoral/approve', [GMListController::class, 'approveGoodMoralItem'])->name('admin.student.goodmoral.approve');
-     Route::post('/admin/student/goodmoral/status', [GMListController::class, 'updateGoodMoralStatus'])->name('admin.student.goodmoral.status');
-     Route::get('/admin/student/goodmoral/download', [GMListController::class, 'downloadGoodMoralForm'])->name('admin.student.goodmoral.download');
-     Route::post('/admin/student/goodmoral/archive', [GMListController::class, 'archiveGoodMoralItem'])->name('admin.student.goodmoral.archive');
+    //student good moral functions
+    Route::post('/admin/student/goodmoral/approve', [GMListController::class, 'approveGoodMoralItem'])->name('admin.student.goodmoral.approve');
+    Route::post('/admin/student/goodmoral/status', [GMListController::class, 'updateGoodMoralStatus'])->name('admin.student.goodmoral.status');
+    Route::get('/admin/student/goodmoral/download', [GMListController::class, 'downloadGoodMoralForm'])->name('admin.student.goodmoral.download');
+    Route::post('/admin/student/goodmoral/archive', [GMListController::class, 'archiveGoodMoralItem'])->name('admin.student.goodmoral.archive');
 
     //student appointment functions
     Route::post('/admin/student/appointment/status', [AppointmentListController::class, 'updateAppointmentStatus'])->name('admin.student.appointment.status');
@@ -131,11 +131,11 @@ Route::middleware(['auth', 'userAuth:1', 'preventBackHistory'])->group(function 
     Route::post('/admin/upload/module', [ModuleController::class, 'uploadModule'])->name('admin.upload.module');
     Route::post('/admin/delete/module', [ModuleController::class, 'deleteModule'])->name('admin.delete.module');
     Route::get('admin/view/{filename}', function ($filename) {
-        $path = public_path('modules_pdf/'.$filename);
+        $path = public_path('modules_pdf/' . $filename);
         $fileContents = file_get_contents($path);
         return Response::make($fileContents, 200, [
             'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="'.$filename.'"'
+            'Content-Disposition' => 'inline; filename="' . $filename . '"'
         ]);
     })->name('pdf.view');
 
@@ -154,6 +154,7 @@ Route::middleware(['auth', 'userAuth:2', 'preventBackHistory'])->group(function 
     Route::get('/user/profile/', [AppController::class, 'viewProfile'])->name('user.viewProfile')->middleware('verified');
 
     //forms
+    Route::get('/user/form', [AppController::class, 'viewForm'])->name('user.viewForm');
     Route::get('/user/form/appointment', [AppController::class, 'viewFormAppointment'])->name('user.viewFormAppointment')->middleware('verified');
     Route::get('/user/form/drop', [AppController::class, 'viewFormDrop'])->name('user.viewFormDrop')->middleware('verified');
     Route::get('/user/form/moral', [AppController::class, 'viewFormMoral'])->name('user.viewFormMoral')->middleware('verified');
@@ -163,6 +164,8 @@ Route::middleware(['auth', 'userAuth:2', 'preventBackHistory'])->group(function 
     Route::post('user/request/drop', [RequestController::class, 'submitDropRequest'])->name('user.request.drop');
     Route::post('user/request/moral', [RequestController::class, 'submitMoralRequest'])->name('user.request.moral');
     Route::post('user/request/report', [RequestController::class, 'submitReportRequest'])->name('user.request.report');
+    // Request Forms Version 2
+    Route::post('user/request/appointment', [RequestController::class, 'submitAppointmentRequestV2'])->name('user.request.appointment.v2');
 
     //cancel request
     Route::post('user/request/cancel', [RequestController::class, 'cancelRequest'])->name('user.request.cancel');
@@ -181,7 +184,3 @@ Route::middleware(['auth', 'userAuth:2', 'preventBackHistory'])->group(function 
     Route::post('user/profile/edit', [ProfileSettingsController::class, 'profile_editor'])->name('student.profile.editor');
     Route::post('user/profile/edit/educational', [ProfileSettingsController::class, 'profile_editor2'])->name('student.profile.editor.educational');
 });
-
-
-
-

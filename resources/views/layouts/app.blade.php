@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Guidance Management</title>
+    <title>@yield('title-page') | Guidance Management</title>
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
@@ -22,10 +23,17 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
     {{-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"> --}}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous">
+    </script>
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
@@ -57,23 +65,33 @@
                     @php
                         $currentRoute = Route::currentRouteName();
                     @endphp
-                    @if (Auth::user()->user_type == 2 )
+                    @if (Auth::user()->user_type == 2)
                         <li class="sidebar-item {{ $currentRoute == 'user.viewDashboard' ? 'active' : '' }}">
                             <a class="sidebar-link" href="{{ route('user.viewDashboard') }}">
                                 <i class="bi bi-house-door-fill"></i>
                                 <span>Guidance Management</span>
                             </a>
                         </li>
-                        <li class="sidebar-item {{ in_array($currentRoute, ['user.viewFormAppointment', 'user.viewFormDrop', 'user.viewFormMoral']) ? 'active' : '' }}">
+                        {{-- <li
+                            class="sidebar-item {{ in_array($currentRoute, ['user.viewFormAppointment', 'user.viewFormDrop', 'user.viewFormMoral']) ? 'active' : '' }}">
                             <a class="sidebar-link" href="#">
                                 <i class="bi bi-ui-checks"></i>
                                 <span>{{ __('Request Forms') }}</span>
                             </a>
                             <ul id="submenu">
-                                <li><a class="{{ $currentRoute == 'user.viewFormAppointment' ? 'active' : '' }}" href="{{ route('user.viewFormAppointment') }}">Request Appointment</a></li>
-                                <li><a class="{{ $currentRoute == 'user.viewFormDrop' ? 'active' : '' }}" href="{{ route('user.viewFormDrop') }}">Request for Dropping</a></li>
-                                <li><a class="{{ $currentRoute == 'user.viewFormMoral' ? 'active' : '' }}" href="{{ route('user.viewFormMoral') }}">Request Good Moral Certificate</a></li>
+                                <li><a class="{{ $currentRoute == 'user.viewFormAppointment' ? 'active' : '' }}"
+                                        href="{{ route('user.viewFormAppointment') }}">Request Appointment</a></li>
+                                <li><a class="{{ $currentRoute == 'user.viewFormDrop' ? 'active' : '' }}"
+                                        href="{{ route('user.viewFormDrop') }}">Request for Dropping</a></li>
+                                <li><a class="{{ $currentRoute == 'user.viewFormMoral' ? 'active' : '' }}"
+                                        href="{{ route('user.viewFormMoral') }}">Request Good Moral Certificate</a></li>
                             </ul>
+                        </li> --}}
+                        <li class="sidebar-item {{ $currentRoute == 'user.viewForm' ? 'active' : '' }}">
+                            <a class="sidebar-link" href="{{ route('user.viewForm') }}">
+                                <i class="bi bi-ui-checks"></i>
+                                <span>{{ __('Request Forms') }}</span>
+                            </a>
                         </li>
                         <li class="sidebar-item {{ $currentRoute == 'user.viewAppointments' ? 'active' : '' }}">
                             <a class="sidebar-link" href="{{ route('user.viewAppointments') }}">
@@ -132,7 +150,8 @@
                                 <span>{{ __('Student Appointments') }}</span>
                             </a>
                         </li>
-                        <li class="sidebar-item {{ $currentRoute == 'admin.viewForms' ? 'active' : '' }} {{ in_array($currentRoute, ['admin.viewReferralForm', 'admin.viewGoodMoralCert', 'admin.viewHomeVisitationForm', 'admin.viewTravelForm']) ? 'active' : '' }}">
+                        <li
+                            class="sidebar-item {{ $currentRoute == 'admin.viewForms' ? 'active' : '' }} {{ in_array($currentRoute, ['admin.viewReferralForm', 'admin.viewGoodMoralCert', 'admin.viewHomeVisitationForm', 'admin.viewTravelForm']) ? 'active' : '' }}">
                             <a class="sidebar-link" href="{{ route('admin.viewForms') }}">
                                 <i class="bi bi-ui-checks"></i>
                                 <span>{{ __('Generate Forms') }}</span>
@@ -163,31 +182,31 @@
                         </li>
                     @endif
 
-            </ul>
-            <div class="sidebar-footer">
-                @if(Auth::user()->user_type == 2)
-                <a class="sidebar-link text-capitalize" href="{{ route('user.viewProfile') }}">
-                    <i class="bi bi-person-fill"></i>
-                    <span class="nav-text">
-                        {{ Auth::user()->first_name}} {{ Auth::user()->last_name }}
-                    </span>
-                </a>
-                @endif
-                @if(Auth::user()->user_type == 1)
-                <a class="sidebar-link" href="{{ route('admin.viewAddAccount') }}">
-                    <i class="bi bi-person-fill-add"></i>
-                    <span class="nav-text">Add Counselor</span>
-                </a>
-                @endif
-                <a class="sidebar-link" href="{{ route('logout') }}"
-                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                    <i class="bi bi-box-arrow-left"></i>
-                    <span>{{ __('Logout') }}</span>
-                </a>
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                    @csrf
-                </form>
-            </div>
+                </ul>
+                <div class="sidebar-footer">
+                    @if (Auth::user()->user_type == 2)
+                        <a class="sidebar-link text-capitalize" href="{{ route('user.viewProfile') }}">
+                            <i class="bi bi-person-fill"></i>
+                            <span class="nav-text">
+                                {{ Auth::user()->first_name }} {{ Auth::user()->last_name }}
+                            </span>
+                        </a>
+                    @endif
+                    @if (Auth::user()->user_type == 1)
+                        <a class="sidebar-link" href="{{ route('admin.viewAddAccount') }}">
+                            <i class="bi bi-person-fill-add"></i>
+                            <span class="nav-text">Add Counselor</span>
+                        </a>
+                    @endif
+                    <a class="sidebar-link" href="{{ route('logout') }}"
+                        onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        <i class="bi bi-box-arrow-left"></i>
+                        <span>{{ __('Logout') }}</span>
+                    </a>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                        @csrf
+                    </form>
+                </div>
             @endguest
         </aside>
 
@@ -198,10 +217,11 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.7/dist/sweetalert2.all.min.js"></script>
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script>
-      AOS.init();
+        AOS.init();
     </script>
 
     @stack('scripts')
 
 </body>
+
 </html>

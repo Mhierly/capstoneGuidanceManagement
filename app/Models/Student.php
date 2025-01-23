@@ -44,6 +44,10 @@ class Student extends Model
         'adviser',
         'student_status',
     ];
+    function listOfAppoitments()
+    {
+        return $this->hasMany(Appointments::class, 'student_id');
+    }
 }
 
 

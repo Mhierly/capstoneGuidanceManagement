@@ -201,7 +201,7 @@ class AdminController extends Controller
         return view('admin.admin_reportList');
     }
 
-    public function viewAppointments()
+    public function viewAppointments(Request $request)
     {
         $this->autoUpdateAppointmentStatus();
 
@@ -221,13 +221,17 @@ class AdminController extends Controller
         }
         $appointmentList = Appointments::select('appointment_request.*')
             ->join('students', 'students.id', '=', 'appointment_request.student_id')
-            ->orderBy('appointment_request.appointment_id', 'asc')
+            ->where('appointment_request.status', 1)
+            ->whereOr('appointment_request.status', 3)
+            ->orderBy('appointment_request.updated_at', 'desc')
             ->orderBy('appointment_request.status', 'asc')
             ->get();
-        /* $appointmentList = mb_convert_encoding($appointmentList, 'UTF-8', 'auto');
-
-        return $appointmentList; */
-        return view('admin.admin_appointmentList', compact('events', 'appointmentList'));
+        $student = [];
+        if ($request->student) {
+            $student = Appointments::where('appointment_id', $request->student)->first();
+            $student = $student->student;
+        }
+        return view('admin.admin_appointmentList', compact('events', 'appointmentList', 'student'));
     }
 
     private function autoUpdateAppointmentStatus()

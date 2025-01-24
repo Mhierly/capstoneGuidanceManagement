@@ -6,31 +6,72 @@
         <div class="row">
 
             <div class="col-md">
-                <div class="card mb-2">
-                    <div class="row no-gutters">
-                        <div class="col-md-3">
-                            <img src="{{ asset('/student/image/3') }}" class="card-img" alt="#">
-                        </div>
-                        <div class="col-md ps-0">
-                            <div class="card-body p-3 me-2">
-                                <h4 class="card-title text-primary fw-bolder">
-                                    STUDENT'S NAME
-                                </h4>
-                                <p class="card-text fw-bolder">
-                                    <span>LRN</span>
-                                </p>
+                @if (request()->input('student'))
+                    <div class="card mb-2">
+                        <div class="row no-gutters">
+                            <div class="col-md-4">
+                                <img src="{{ $student->studentProfile() }}" class="avatar-130 rounded" style="width:80%"
+                                    alt="applicant-profile">
+                            </div>
+                            <div class="col-md ps-0">
+                                <div class="card-body p-3 me-2">
+                                    @php
+                                        $applicantName = $student
+                                            ? ($student
+                                                ? strtoupper($student->lastname . ', ' . $student->firstname)
+                                                : strtoupper($student->name))
+                                            : 'MIDSHIPMAN NAME';
+                                    @endphp
+                                    <label for="" class="fw-bolder text-primary h4">{{ $applicantName }}</label>
+                                    <p class="mb-0">
+                                        @if ($student)
+                                            <small class="badge bg-primary">
+                                                {{ $student->school_id }}
+                                            </small>
+                                            <small class="badge bg-primary">
+                                                {{ $student->account->email }}
+                                            </small>-
+                                            <small class="badge bg-primary">
+                                                @if ($student->lrn)
+                                                    {{ $student->lrn }}
+                                                @else
+                                                    {{ '(LRN to be updated)' }}
+                                                @endif
+                                            </small>
+                                        @endif
+                                    </p>
+
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                @else
+                    <div class="card mb-2">
+                        <div class="row no-gutters">
+                            <div class="col-md-3">
+                                <img src="{{ asset('img/male.jpg') }}" class="card-img" alt="#">
+                            </div>
+                            <div class="col-md ps-0">
+                                <div class="card-body p-3 me-2">
+                                    <h4 class="card-title text-primary fw-bolder">
+                                        STUDENT'S NAME
+                                    </h4>
+                                    <p class="card-text fw-bolder">
+                                        <span>LRN</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
             </div>
             <div class="col-md-4">
                 <small class="fw-bolder text-primary">APPOINTMENT REQUEST LIST</small>
                 @forelse ($appointmentList as $item)
                     <div class="card mb-2">
-                        <a href="{{-- {{ route('admin.viewAppointments', [student => base64_encode($item->id)]) }} --}}">
+                        <a href="{{ route('admin.viewAppointments', ['student' => $item->appointment_id]) }}">
                             <div class="row no-gutters">
-                                {{ $item->student }}
                                 <div class="col-md-4">
                                     <img src="{{ $item->student->studentProfile() }}" width="100%"
                                         class="avatar-100 rounded" alt="applicant-profile">
@@ -39,8 +80,24 @@
                                     <div class="card-body p-2">
                                         <small
                                             class="text-primary fw-bolder">{{ strtoupper($item->student->lastname . ', ' . $item->student->firstname) }}</small>
-
-
+                                        <br>
+                                        <small class="text-muted fw-bolder">{{ $item->subject }}</small>
+                                        <br>
+                                        @if ($item->status === 1)
+                                            <span class="badge bg-secondary">PENDING <i
+                                                    class="bi bi-hourglass-bottom text-white"></i></span>
+                                            {{--  @elseif($item->status === 2)
+                                            <span class="badge bg-danger">CANCELLED <i
+                                                    class="bi bi-x-circle text-white"></i></span>
+                                        @elseif($item->status === 3)
+                                            <span class="badge bg-success">APPROVED <i
+                                                    class="bi bi-check-circle text-white"></i></span>
+                                        @elseif($item->status === 4)
+                                            <span class="badge bg-primary">COMPLETED <i
+                                                    class="bi bi-check-circle-fill text-white"></i></span> --}}
+                                        @else
+                                            {{ $item->status }}
+                                        @endif
                                     </div>
                                 </div>
                             </div>

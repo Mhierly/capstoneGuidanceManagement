@@ -6,8 +6,6 @@
             width: 100%;
             overflow: hidden;
         }
-
-       
     </style>
     <div class="container">
         <h1 class="text-primary fw-bolder">REQUEST FORMS</h1>
@@ -34,14 +32,30 @@
                 </div>
             </div>
             <div class="col-md">
-                @if (request()->input('form') == 'appointment')
-                    @include('user.request_forms.component.appointment')
-                @elseif(request()->input('form') == 'dropping-form')
-                    @include('user.request_forms.component.droppingForm')
-                @elseif(request()->input('form') == 'good-moral')
+                @if ($status == 'Incomplete')
+                    <div class="card">
+                        <div class="card-header">
+                            <label for="" class="fw-bolder text-primary h3">
+                                Please complete your profile!
+                            </label>
+                            <p class="text-muted">
+                                Please complete your profile to be able to request.
+                            </p>
+                            <a href="{{ route('user.viewProfileV2') }}" class="btn btn-primary btn-sm float-end">Go to
+                                Profile</a>
+                        </div>
+                    </div>
                 @else
-                    @include('user.request_forms.component.appointment')
+                    @if (request()->input('form') == 'appointment')
+                        @include('user.request_forms.component.appointment')
+                    @elseif(request()->input('form') == 'dropping-form')
+                        @include('user.request_forms.component.droppingForm')
+                    @elseif(request()->input('form') == 'good-moral')
+                    @else
+                        @include('user.request_forms.component.appointment')
+                    @endif
                 @endif
+
 
             </div>
         </div>

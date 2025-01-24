@@ -152,6 +152,7 @@ Route::middleware(['auth', 'userAuth:2', 'preventBackHistory'])->group(function 
     Route::get('/user/appointments', [AppController::class, 'viewAppointments'])->name('user.viewAppointments')->middleware('verified');
     Route::get('/user/code', [AppController::class, 'viewCOC'])->name('user.viewCOC')->middleware('verified');
     Route::get('/user/profile/', [AppController::class, 'viewProfile'])->name('user.viewProfile')->middleware('verified');
+    Route::get('/user/profile/v2', [AppController::class, 'viewProfileV2'])->name('user.viewProfileV2')->middleware('verified');
 
     //forms
     Route::get('/user/form', [AppController::class, 'viewForm'])->name('user.viewForm');

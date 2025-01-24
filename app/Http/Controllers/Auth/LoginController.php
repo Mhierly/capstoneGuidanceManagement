@@ -57,11 +57,11 @@ class LoginController extends Controller
                 return redirect()->route('admin.viewDashboard');
             } else if (auth()->user()->user_type == 2) {
                 $student = DB::table('students')->where('user_id', auth()->user()->id)->first();
-
-                if ($student->student_status == '0') {
-                    return redirect()->back()->with(['student_drop_status' => $student->student_status])->WithInput();
+                if ($student) {
+                    if ($student->student_status == '0') {
+                        return redirect()->back()->with(['student_drop_status' => $student->student_status])->WithInput();
+                    }
                 }
-
                 return redirect()->route('user.viewDashboard');
             } else {
                 abort(404);

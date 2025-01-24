@@ -44,13 +44,26 @@ class Student extends Model
         'adviser',
         'student_status',
     ];
+    function account()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+    function studentProfile()
+    {
+        if (is_null($this->student_img)) {
+            $image = $this->sex == 'male' ?  asset('img/male.jpg') : asset('img/female.jpg');
+        } else {
+            $image = route('student.image', ['id' => $this->id]);
+        }
+        return $image;
+    }
     function listOfAppoitments()
     {
-        return $this->hasMany(Appointments::class, 'student_id')->orderBy('status', 'desc')->orderBy('appointment_id', 'desc');
+        return $this->hasMany(Appointments::class, 'student_id')->orderBy('status', 'asc')->orderBy('appointment_id', 'desc');
     }
     function dropRequest()
     {
-        return $this->hasMany(Drops::class, 'student_id')->orderBy('status', 'desc')->orderBy('drop_request_id', 'desc');
+        return $this->hasMany(Drops::class, 'student_id')->orderBy('status', 'asc')->orderBy('drop_request_id', 'desc');
     }
 }
 

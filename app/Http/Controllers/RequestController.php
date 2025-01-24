@@ -113,7 +113,6 @@ class RequestController extends Controller
             'reason' => 'required'
         ]);
         try {
-            return $request;
             $student = $this->getStudentData(Auth::user()->id);
             $appointmentData = [
                 'student_id' => $student->id,

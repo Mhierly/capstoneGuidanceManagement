@@ -12,7 +12,21 @@ class Appointments extends Model
     protected $table = 'appointment_request';
 
     protected $fillable = [
-        'request_type',	'student_id', 'appointment_date', 'appointment_time', 'appointment_time_from', 'appointment_time_to','duration',
-	'subject',	'status',	'reason',	'counselor_id',
+        'request_type',
+        'student_id',
+        'appointment_date',
+        'appointment_time',
+        'appointment_time_from',
+        'appointment_time_to',
+        'duration',
+        'subject',
+        'status',
+        'reason',
+        'counselor_id',
     ];
+
+    function student()
+    {
+        return $this->belongsTo(Student::class, 'student_id');
+    }
 }

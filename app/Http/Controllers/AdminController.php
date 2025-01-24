@@ -8,7 +8,9 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\Mailer;
+use App\Models\Appointments;
 use Carbon\Carbon;
+
 class AdminController extends Controller
 {
 
@@ -28,7 +30,8 @@ class AdminController extends Controller
         // });
     }
 
-    public function viewDashboard(){
+    public function viewDashboard()
+    {
 
         $no_of_report = DB::table('student_concern')->count();
         $no_of_drop = DB::table('drop_request')->where('isActive', '1')->count();
@@ -62,29 +65,34 @@ class AdminController extends Controller
         return view('admin.admin_dashboard', ['data' => $data], compact('events'));
     }
 
-    public function viewStudentList(){
+    public function viewStudentList()
+    {
         $grade_levels = DB::table('grade_level')->get();
         $advisers = DB::table('advisers')->get();
 
         return view('admin.admin_studentList', ['grade_levels' => $grade_levels, 'advisers' => $advisers]);
     }
 
-    public function viewCreateModule(){
+    public function viewCreateModule()
+    {
         return view('admin.admin_createModule');
     }
 
-    public function viewCOC(){
+    public function viewCOC()
+    {
         return view('admin.admin_coc');
     }
 
-    public function viewDropRequestList(){
+    public function viewDropRequestList()
+    {
 
         $this->autoUpdateDropRequestStatus();
 
         return view('admin.admin_dropRequestList');
     }
 
-    private function autoUpdateDropRequestStatus(){
+    private function autoUpdateDropRequestStatus()
+    {
         // Get current date
         $today = Carbon::today();
 
@@ -107,7 +115,7 @@ class AdminController extends Controller
                 $email_data = [
                     'subject' => 'Your drop request has been automatically canceled by the system',
                     'email_header' => 'Student drop request canceled',
-                    'email_description' => 'Good day '. ucwords($student->firstname) .'! Your drop request about "'.$request->reason.'" requested on '.$request->request_date.' has been automatically cancelled by the system. Please contact the guidance counselor if this is a mistake. Thank you!',
+                    'email_description' => 'Good day ' . ucwords($student->firstname) . '! Your drop request about "' . $request->reason . '" requested on ' . $request->request_date . ' has been automatically cancelled by the system. Please contact the guidance counselor if this is a mistake. Thank you!',
                     'email_notes' => '(Automatically canceled by the system)',
                 ];
 
@@ -131,14 +139,16 @@ class AdminController extends Controller
         }
     }
 
-    public function viewGoodMoralList(){
+    public function viewGoodMoralList()
+    {
 
         $this->autoUpdateGoodMoralRequestStatus();
 
         return view('admin.admin_goodMoralList');
     }
 
-    private function autoUpdateGoodMoralRequestStatus(){
+    private function autoUpdateGoodMoralRequestStatus()
+    {
         // Get current date
         $today = Carbon::today();
 
@@ -156,16 +166,16 @@ class AdminController extends Controller
                     ->where('request_id', $request->request_id)
                     ->update(['status' => 2]);
 
-                    $student = DB::table('students')->where('id', $request->student_id)->first();
+                $student = DB::table('students')->where('id', $request->student_id)->first();
 
-                    $email_data = [
-                        'subject' => 'Your good moral request has been automatically canceled by the system',
-                        'email_header' => 'Student good moral request canceled',
-                        'email_description' => 'Good day '. ucwords($student->firstname) .'! Your good moral request about "'.$request->reason.'" requested on '.$request->request_date.' has been automatically cancelled by the system. Please contact the guidance counselor if this is a mistake. Thank you!',
-                        'email_notes' => '(Automatically canceled by the system)',
-                    ];
+                $email_data = [
+                    'subject' => 'Your good moral request has been automatically canceled by the system',
+                    'email_header' => 'Student good moral request canceled',
+                    'email_description' => 'Good day ' . ucwords($student->firstname) . '! Your good moral request about "' . $request->reason . '" requested on ' . $request->request_date . ' has been automatically cancelled by the system. Please contact the guidance counselor if this is a mistake. Thank you!',
+                    'email_notes' => '(Automatically canceled by the system)',
+                ];
 
-                    $this->mailCancelUpdate($email_data, $student->email);
+                $this->mailCancelUpdate($email_data, $student->email);
             }
         }
 
@@ -185,12 +195,14 @@ class AdminController extends Controller
         }
     }
 
-    public function viewReports(){
+    public function viewReports()
+    {
 
         return view('admin.admin_reportList');
     }
 
-    public function viewAppointments(){
+    public function viewAppointments()
+    {
         $this->autoUpdateAppointmentStatus();
 
         $events = [];
@@ -207,11 +219,19 @@ class AdminController extends Controller
                 'end' => $appointment->appointment_date . ' ' . $appointment->appointment_time_to,
             ];
         }
+        $appointmentList = Appointments::select('appointment_request.*')
+            ->join('students', 'students.id', '=', 'appointment_request.student_id')
+            ->orderBy('appointment_request.appointment_id', 'asc')
+            ->orderBy('appointment_request.status', 'asc')
+            ->get();
+        /* $appointmentList = mb_convert_encoding($appointmentList, 'UTF-8', 'auto');
 
-        return view('admin.admin_appointmentList', compact('events'));
+        return $appointmentList; */
+        return view('admin.admin_appointmentList', compact('events', 'appointmentList'));
     }
 
-    private function autoUpdateAppointmentStatus(){
+    private function autoUpdateAppointmentStatus()
+    {
         // Get current date and time
         $now = Carbon::now();
 
@@ -229,16 +249,16 @@ class AdminController extends Controller
                     ->where('appointment_id', $appointment->appointment_id)
                     ->update(['status' => 2]);
 
-                    $student = DB::table('students')->where('id', $appointment->student_id)->first();
+                $student = DB::table('students')->where('id', $appointment->student_id)->first();
 
-                    $email_data = [
-                        'subject' => 'Your appointment request has been automatically canceled by the system',
-                        'email_header' => 'Student appointment request canceled',
-                        'email_description' => 'Good day '. ucwords($student->firstname) .'! Your appointment request about "'.$appointment->subject.'" requested on '.$appointment->created_at.' has been automatically cancelled by the system. Please contact the guidance counselor if this is a mistake. Thank you!',
-                        'email_notes' => '(Automatically canceled by the system)',
-                    ];
+                $email_data = [
+                    'subject' => 'Your appointment request has been automatically canceled by the system',
+                    'email_header' => 'Student appointment request canceled',
+                    'email_description' => 'Good day ' . ucwords($student->firstname) . '! Your appointment request about "' . $appointment->subject . '" requested on ' . $appointment->created_at . ' has been automatically cancelled by the system. Please contact the guidance counselor if this is a mistake. Thank you!',
+                    'email_notes' => '(Automatically canceled by the system)',
+                ];
 
-                    $this->mailCancelUpdate($email_data, $student->email);
+                $this->mailCancelUpdate($email_data, $student->email);
             }
         }
 
@@ -258,15 +278,18 @@ class AdminController extends Controller
         }
     }
 
-    public function viewForms(){
+    public function viewForms()
+    {
         return view('admin.admin_forms');
     }
 
-    public function viewSrdRecords(){
+    public function viewSrdRecords()
+    {
         return view('admin.admin_srdRecords');
     }
 
-    public function viewGoodMoralCert(){
+    public function viewGoodMoralCert()
+    {
         $students = DB::table('students')->get();
 
         $currentDate = Carbon::now();
@@ -284,7 +307,8 @@ class AdminController extends Controller
         return view('admin.request_forms.good_moral_cert', ['info' => $info, 'students' => $students]);
     }
 
-    public function viewHomeVisitationForm(){
+    public function viewHomeVisitationForm()
+    {
         $students = DB::table('students')->get();
 
         $currentDate = Carbon::now();
@@ -301,24 +325,27 @@ class AdminController extends Controller
         return view('admin.request_forms.home_visitation', ['info' => $info, 'students' => $students]);
     }
 
-    public function viewReferralForm(){
+    public function viewReferralForm()
+    {
         return view('admin.request_forms.referral_form');
     }
-    public function viewTravelForm(){
+    public function viewTravelForm()
+    {
         return view('admin.request_forms.travel_form');
     }
-    public function viewAddAccount(){
+    public function viewAddAccount()
+    {
         return view('admin.admin_add_account');
     }
 
 
-    private function mailCancelUpdate($data, $email){
+    private function mailCancelUpdate($data, $email)
+    {
         $layout = 'mail_layout.request_update_email';
         $subject = $data['subject'];
 
         try {
             Mail::to($email)->send(new Mailer($data, $layout, $subject));
-
         } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }

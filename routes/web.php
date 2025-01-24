@@ -184,4 +184,6 @@ Route::middleware(['auth', 'userAuth:2', 'preventBackHistory'])->group(function 
     //profile editor
     Route::post('user/profile/edit', [ProfileSettingsController::class, 'profile_editor'])->name('student.profile.editor');
     Route::post('user/profile/edit/educational', [ProfileSettingsController::class, 'profile_editor2'])->name('student.profile.editor.educational');
+    Route::post('user/profile/edit/v2', [ProfileSettingsController::class, 'profileEditor2'])->name('student.profile.editor.v2');
+    
 });

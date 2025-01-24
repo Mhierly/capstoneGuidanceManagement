@@ -27,11 +27,12 @@ class ProfileSettingsController extends Controller
         // });
     }
 
-    public function profile_editor(Request $request){
+    public function profile_editor(Request $request)
+    {
         $student_id = DB::table('students')->where('user_id', Auth::user()->id)->value('id');
         $check_email = DB::table('students')->where('id', $student_id)->value('email');
 
-        if($request->file('profile_img') == NULL){
+        if ($request->file('profile_img') == NULL) {
             $studentData = [
                 'email' => $request->input('profile_email'),
                 'firstname' => $request->input('profile_first_name'),
@@ -60,10 +61,10 @@ class ProfileSettingsController extends Controller
             $profile_status = false;
         } else {
             $image = Image::make($request->file('profile_img'))
-                        ->resize(800, 800, function ($constraint) {
-                            $constraint->aspectRatio();
-                        })
-                        ->encode('jpg', 75); // Resize and compress image
+                ->resize(800, 800, function ($constraint) {
+                    $constraint->aspectRatio();
+                })
+                ->encode('jpg', 75); // Resize and compress image
 
             $studentData = [
                 'student_img' => $image,
@@ -95,15 +96,15 @@ class ProfileSettingsController extends Controller
 
         try {
             $status = DB::table('students')->where('id', $student_id)->update($studentData);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             return redirect()->back()->with('error_update', 'Profile update failed!');
         }
 
-        if($status || $profile_status){
-            if($check_email != $request->input('profile_email')){
+        if ($status || $profile_status) {
+            if ($check_email != $request->input('profile_email')) {
                 $update_user_email = DB::table('users')->where('id', Auth::user()->id)->update(['email' => $request->input('profile_email')]);
 
-                if(!$update_user_email){
+                if (!$update_user_email) {
                     return redirect()->back()->with('error_update', 'Profile update failed!');
                 }
             }
@@ -115,7 +116,8 @@ class ProfileSettingsController extends Controller
         }
     }
 
-    public function profile_editor2(Request $request){
+    public function profile_editor2(Request $request)
+    {
         $student_id = DB::table('students')->where('user_id', Auth::user()->id)->value('id');
 
         $studentData = [
@@ -129,21 +131,47 @@ class ProfileSettingsController extends Controller
         try {
 
             $status = DB::table('students')->where('id', $student_id)->update($studentData);
-
-        } catch(Exception $e) {
+        } catch (Exception $e) {
 
             return redirect()->back()->with('error_update', 'Profile update failed!');
-
         }
 
-        if($status){
+        if ($status) {
 
             DB::table('students')->where('id', $student_id)->update(['updated_at' => now()]);
             return redirect()->back()->with('status_update', 'Profile updated successfully!');
-
         } else {
             return redirect()->back()->with('status_no_update', 'No changes made.');
         }
-
+    }
+    function profileEditor2(Request $request)
+    {
+        $request->validate([
+            'last_name' => 'required',
+            'first_name' => 'required',
+            'birthdate' => 'required',
+            'gender' => 'required',
+            'nationality' => 'required',
+            'religion' => 'required',
+            'email' => 'required',
+            'contact' => 'required',
+            'province' => 'required',
+            'municipality' => 'required',
+            'baranggay' => 'required',
+            'nationality' => 'required',
+            'religion' => 'required',
+            'father' => 'required',
+            'father_occupation' => 'required',
+            'mother' => 'required',
+            'mother_occupation' => 'required',
+            'living_with' => 'required',
+            'no_of_siblings' => 'required',
+            'position' => 'required',
+        ]);
+        try {
+            //code...
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
     }
 }

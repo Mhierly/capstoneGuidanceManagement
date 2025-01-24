@@ -321,8 +321,15 @@ class AppController extends Controller
                 'Animism',
                 'Other',
             ];
+
             $student = Student::where('user_id', Auth::user()->id)->first();
-            return view('user.userProfileView', compact('student', 'nationalities', 'religions'));
+            $student_address = [
+                'province' => DB::table('philippine_provinces')->where('province_code', $student->province)->value('province_description') ?? '(UPDATE)',
+                'city' => DB::table('philippine_cities')->where('city_municipality_code', $student->municipality)->value('city_municipality_description') ?? '(UPDATE)',
+                'barangay' => DB::table('philippine_barangays')->where('barangay_code', $student->baranggay)->value('barangay_description') ?? '(UPDATE)',
+            ];
+            $province =  DB::table('philippine_provinces')->get();
+            return view('user.userProfileView', compact('student', 'nationalities', 'religions', 'student_address', 'province'));
         } catch (\Throwable $th) {
             //throw $th;
         }

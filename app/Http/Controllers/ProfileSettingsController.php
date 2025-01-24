@@ -147,6 +147,7 @@ class ProfileSettingsController extends Controller
     function profileEditor2(Request $request)
     {
         $request->validate([
+            'student_profile' => 'required',
             'last_name' => 'required',
             'first_name' => 'required',
             'birthdate' => 'required',
@@ -158,8 +159,6 @@ class ProfileSettingsController extends Controller
             'province' => 'required',
             'municipality' => 'required',
             'baranggay' => 'required',
-            'nationality' => 'required',
-            'religion' => 'required',
             'father' => 'required',
             'father_occupation' => 'required',
             'mother' => 'required',
@@ -169,9 +168,37 @@ class ProfileSettingsController extends Controller
             'position' => 'required',
         ]);
         try {
-            //code...
+            $account = Auth::user()->student;
+            $imageFile = $this->saveImage($request->file('student_profile'), 'public', 'profileImage');
+            $studentData = array(
+                'student_img' => $imageFile,
+                'email' => $request->input('email'),
+                'firstname' => ucwords(strtolower(trim($request->input('first_name')))),
+                'middlename' =>  ucwords(strtolower(trim($request->input('middle_name')))),
+                'lastname' =>  ucwords(strtolower(trim($request->input('last_name')))),
+                'suffix' => $request->input('suffix'),
+                'contact_no' => $request->input('contact'),
+                'birthday' => $request->input('birthdate'),
+                'sex' => $request->input('gender'),
+                'house_no_street' => ucwords(strtolower(trim($request->input('street')))),
+                'baranggay' => $request->input('baranggay'),
+                'municipality' => $request->input('municipality'),
+                'province' => $request->input('province'),
+                'nationality' => $request->input('nationality'),
+                'religion' => $request->input('religion'),
+                'father' => ucwords(strtolower(trim($request->input('father')))),
+                'father_occupation' => ucwords(strtolower(trim($request->input('father_occupation')))),
+                'mother' => ucwords(strtolower(trim($request->input('mother')))),
+                'mother_occupation' => ucwords(strtolower(trim($request->input('mother_occupation')))),
+                'living_with' => $request->input('living_with'),
+                'no_of_siblings' => $request->input('no_of_siblings'),
+                'position' => $request->input('position'),
+            );
+            // Student::find()->update()
+            $account->update($studentData);
+            return redirect(route('user.viewProfileV2'))->with('success', 'Profile updated successfully!');
         } catch (\Throwable $th) {
-            //throw $th;
+            return redirect()->back()->with('error', $th->getMessage());
         }
     }
 }

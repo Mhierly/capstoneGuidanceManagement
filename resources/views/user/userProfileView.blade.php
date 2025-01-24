@@ -105,8 +105,8 @@
                                             <img src="{{ $student->studentProfile() }}" alt="Student Image" class=""
                                                 width="110" height="110" style="object-fit: cover;">
                                             <input type="file" class="form-control form-control-sm border border-primary"
-                                                name="img" id="img">
-                                            @error('record')
+                                                name="student_profile" id="img">
+                                            @error('student_profile')
                                                 <span class="badge bg-danger mb-2">{{ $message }}</span>
                                             @enderror
                                             <div id="file-error" class="text-danger mt-2" style="display:none;">Please
@@ -365,8 +365,8 @@
                                                     class="text-danger">*</span></small>
                                             <input type="text"
                                                 class="form-control form-control-sm border border-primary"
-                                                name="no_sibling" value="{{ $student->no_of_siblings }}">
-                                            @error('no_sibling')
+                                                name="no_of_siblings" value="{{ $student->no_of_siblings }}">
+                                            @error('no_of_siblings')
                                                 <span class="badge bg-danger mb-2">{{ $message }}</span>
                                             @enderror
                                         </div>
@@ -374,10 +374,10 @@
                                             <small class="fw-bolder text-muted">SIBLINGS POSITION<span
                                                     class="text-danger">*</span></small>
                                             <input type="text"
-                                                class="form-control form-control-sm border border-primary"
-                                                name="sibling_position" value="{{ $student->position }}" min="1"
+                                                class="form-control form-control-sm border border-primary" name="position"
+                                                value="{{ $student->position }}" min="1"
                                                 max="{{ $student->no_of_siblings }}">
-                                            @error('sibling_position')
+                                            @error('position')
                                                 <span class="badge bg-danger mb-2">{{ $message }}</span>
                                             @enderror
                                         </div>
@@ -386,8 +386,8 @@
                                                     class="text-danger">*</span></small>
                                             <input type="text"
                                                 class="form-control form-control-sm border border-primary"
-                                                name="mother_occupation" value="{{ $student->mother_occupation }}">
-                                            @error('mother')
+                                                name="emergency_contact" value="{{ $student->emergency_contact }}">
+                                            @error('emergency_contact')
                                                 <span class="badge bg-danger mb-2">{{ $message }}</span>
                                             @enderror
                                         </div>
@@ -556,35 +556,86 @@
     </div>
     <script>
         $(document).ready(function() {
+            const province = '{{ $student->province }}';
+            setMunicipality(province)
+            const municipality = '{{ $student->municipality }}';
+            // setMunicipality(province)
+            setBarangay(province, municipality)
             $('#province').on('change', function() {
                 let value = $('#province').val();
-                setMunicipality(value, '#municipality')
+                setMunicipality(value)
                 console.log(value)
             });
-
-            function setMunicipality(provinceCode, cityDropdown) {
-                /* const provinceCode = $('#profile_province').val();
-                const cityDropdown = $('#profile_municipality'); */
-                const selectedMunicipality = '{{ $student->municipality }}';
-
-                $.ajax({
-                    type: 'GET',
-                    url: `{{ route('fetch.user.location.cities', ':province_code') }}`.replace(
-                        ':province_code', provinceCode),
-                    success: (cities) => {
-                        // Clear and populate the city dropdown
-                        cityDropdown.html(cities.map(city => {
-                            const isSelected = city.city_municipality_code ===
-                                selectedMunicipality ? 'selected' : '';
-                            return `<option value="${city.city_municipality_code}" ${isSelected}>${city.city_municipality_description}</option>`;
-                        }).join(''));
-                    },
-                    error: (xhr, status, error) => {
-                        console.error('Error fetching cities:', xhr.responseText);
-                    }
+            $('#municipality').on('change', function() {
+                const provinceCode = $('#province').val();
+                const cityCode = $('#municipality').val();
+                setBarangay(provinceCode, cityCode)
+            });
+            @if (session('error'))
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: '{{ session('error') }}'
                 });
-
-            }
+            @elseif (session('success'))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Request sent!',
+                    text: '{{ session('success') }}'
+                });
+            @endif
         });
+
+        function setMunicipality(provinceCode) {
+            const cityDropdown = $('#municipality');
+            const selectedMunicipality = '{{ $student->municipality }}';
+
+            $.ajax({
+                type: 'GET',
+                url: `{{ route('fetch.user.location.cities', ':province_code') }}`.replace(
+                    ':province_code', provinceCode),
+                success: (cities) => {
+                    // Clear and populate the city dropdown
+                    cityDropdown.html(cities.map(city => {
+                        const isSelected = city.city_municipality_code ===
+                            selectedMunicipality ? 'selected' : '';
+                        return `<option value="${city.city_municipality_code}" ${isSelected}>${city.city_municipality_description}</option>`;
+                    }).join(''));
+                },
+                error: (xhr, status, error) => {
+                    console.error('Error fetching cities:', xhr.responseText);
+                }
+            });
+
+        }
+
+        function setBarangay(provinceCode, cityCode) {
+
+            console.log(cityCode)
+            const barangayDropdown = $('#baranggay');
+            const selectedBarangay = '{{ $student->baranggay }}';
+
+            // Construct the URL with province and city codes
+            const url = `{{ route('fetch.user.location.barangays', [':province_code', ':city_code']) }}`
+                .replace(':province_code', provinceCode)
+                .replace(':city_code', cityCode);
+
+            $.ajax({
+                type: 'GET',
+                url: url,
+                success: (barangays) => {
+                    // Clear and populate the barangay dropdown
+                    barangayDropdown.html(barangays.map(barangay => {
+                        const isSelected = barangay.barangay_code === selectedBarangay ?
+                            'selected' : '';
+                        return `<option value="${barangay.barangay_code}" ${isSelected}>${barangay.barangay_description}</option>`;
+                    }).join(''));
+                },
+                error: (xhr, status, error) => {
+                    console.error('Error fetching barangays:', xhr.responseText);
+                }
+            });
+
+        }
     </script>
 @endsection

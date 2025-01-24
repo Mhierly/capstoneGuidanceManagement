@@ -384,7 +384,7 @@ class AppController extends Controller
         $student = Student::where('user_id', Auth::user()->id)->first();
         $status = "Complete";
         if ($student) {
-            $attributes = collect($student->getAttributes())->except('middlename', 'suffix', 'lrn', 'elem_school');
+            $attributes = collect($student->getAttributes())->except('middlename', 'student_img', 'suffix', 'lrn', 'elem_school');
             if ($attributes->contains(function ($value) {
                 return is_null($value);
             })) {

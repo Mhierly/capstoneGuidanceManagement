@@ -53,7 +53,7 @@ class Student extends Model
         if (is_null($this->student_img)) {
             $image = $this->sex == 'male' ?  asset('img/male.jpg') : asset('img/female.jpg');
         } else {
-            $image = route('student.image', ['id' => $this->id]);
+            $image = $this->student_img;
         }
         return $image;
     }

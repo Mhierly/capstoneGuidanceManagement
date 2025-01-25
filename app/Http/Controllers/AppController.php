@@ -329,7 +329,10 @@ class AppController extends Controller
                 'barangay' => DB::table('philippine_barangays')->where('barangay_code', $student->baranggay)->value('barangay_description') ?? '(UPDATE)',
             ];
             $province =  DB::table('philippine_provinces')->get();
-            return view('user.userProfileView', compact('student', 'nationalities', 'religions', 'student_address', 'province'));
+            $grades = DB::table('grade_level')->get();
+            $advisers = DB::table('advisers')->get();
+            $sections = DB::table('sections')->get();
+            return view('user.userProfileView', compact('student', 'nationalities', 'religions', 'student_address', 'province', 'grades', 'advisers', 'sections'));
         } catch (\Throwable $th) {
             //throw $th;
         }

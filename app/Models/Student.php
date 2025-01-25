@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Student extends Model
 {
@@ -64,6 +65,18 @@ class Student extends Model
     function dropRequest()
     {
         return $this->hasMany(Drops::class, 'student_id')->orderBy('status', 'asc')->orderBy('drop_request_id', 'desc');
+    }
+    function adviser()
+    {
+        return DB::table('advisers')->where('id', $this->adviser)->first();
+    }
+    function section()
+    {
+        return DB::table('advisers')->where('id', $this->current_grade)->first();
+    }
+    function yearLevel()
+    {
+        return DB::table('grade_level')->where('id', $this->current_grade)->first();
     }
 }
 

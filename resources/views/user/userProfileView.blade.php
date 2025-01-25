@@ -80,7 +80,8 @@
                             <a {{-- data-bs-toggle="modal" data-bs-target="#edit_profile" --}} href="{{ route('user.viewProfileV2', ['editor' => 'profile']) }}"
                                 class="btn btn-primary btn-sm mt-2 w-100">UPDATE STUDENT
                                 INFORMATION</a>
-                            <a class="btn btn-primary btn-sm mt-2 w-100">UPDATE EDUCATION
+                            <a href="{{ route('user.viewProfileV2', ['editor' => 'educational-background']) }}"
+                                class="btn btn-primary btn-sm mt-2 w-100">UPDATE EDUCATION
                                 BACKGROUND</a>
                         </div>
                     </div>
@@ -88,6 +89,21 @@
                 @endif
             </div>
             <div class="col-md">
+                @if (session('status_update'))
+                    <div class="alert alert-success">
+                        {{ session('status_update') }}
+                    </div>
+                @endif
+                @if (session('error_update'))
+                    <div class="alert alert-danger">
+                        {{ session('error_update') }}
+                    </div>
+                @endif
+                @if (session('status_no_update'))
+                    <div class="alert alert-secondary">
+                        {{ session('status_no_update') }}
+                    </div>
+                @endif
                 @if (request()->input('editor') == 'profile')
                     <div class="card">
                         <div class="card-header">
@@ -400,6 +416,102 @@
                             </form>
                         </div>
                     </div>
+                @elseif(request()->input('editor') == 'educational-background')
+                    <div class="card">
+                        <div class="card-header">
+                            <a href="{{ route('user.viewProfileV2') }}"
+                                class="btn btn-sm btn-outline-danger float-end">CANCEL</a>
+                            <label for="" class="fw-bolder text-primary h4">UPDATE EDUCATIONAL BACKGROUND</label>
+                        </div>
+                        <div class="card-body">
+                            <form id="edit_profile2_form" class="row g-3"
+                                action="{{ route('student.profile.editor.educational') }}" method="POST"
+                                enctype="multipart/form-data">
+                                @csrf
+
+                                <div class="col-md-12">
+                                    <small class="text-muted fw-bolder">
+                                        LEARNER REFERENCE NUMBER <small class="text-danger">(12-digit number)</small> <span
+                                            class="text-danger">*</span>
+                                    </small>
+                                    <input type="text" id="lrn"
+                                        class="form-control form-control-sm border border-primary" name="lrn"
+                                        value="{{ $student->lrn }}" pattern="\d{12}"
+                                        title="Please enter a 12-digit number" maxlength="12" oninput="validateLRN(this)"
+                                        placeholder="(Need to update)" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <small class="text-muted fw-bolder">
+                                        ELEMENTARY SCHOOL GRADUATE <span class="text-danger">*</span>
+                                    </small>
+                                    <input type="text" id="elem_school"
+                                        class="form-control form-control-sm border border-primary" name="elem_school"
+                                        value="{{ $student->elem_school }}" placeholder="(Need to update)">
+                                </div>
+                                <div class="col-md-6">
+                                    <small class="text-muted fw-bolder">
+                                        STUDENT GENERAL AVERAGE <span class="text-danger">*</span>
+                                    </small>
+                                    <input type="number" min="50" max="100" id="gen_average"
+                                        name="gen_average" value="{{ $student->gen_average }}"
+                                        class="form-control form-control-sm border border-primary">
+                                </div>
+                                <div class="col-md-6">
+                                    <small class="text-muted fw-bolder">STUDENT CURRENT GRADE <span
+                                            class="text-danger">*</span></small>
+                                    <select id="current_grade_options"
+                                        class="form-select form-select-sm border border-primary"
+                                        name="current_grade_options">
+                                        <option disabled selected>(UPDATE)</option>
+                                        @forelse ($grades as $level)
+                                            <option value="{{ $level->id }}"
+                                                {{ $student->current_grade == $level->id ? 'selected' : '' }}>
+                                                {{ $level->grade_level }}</option>
+                                        @empty
+                                            <option value="">No Data</option>
+                                        @endforelse
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <small class="text-muted fw-bolder">
+                                        STUDENT CURRENT SECTION <span class="text-danger">*</span>
+                                    </small>
+                                    <select id="current_section_options"
+                                        class="form-select form-select-sm border border-primary"
+                                        name="current_section_options">
+                                        <option disabled selected>(UPDATE)</option>
+                                        @forelse ($sections as $section)
+                                            <option value="{{ $section->id }}"
+                                                {{ $student->current_section == $section->id ? 'selected' : '' }}>
+                                                {{ $section->section_name }}</option>
+                                        @empty
+                                            <option value="">No Data</option>
+                                        @endforelse
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <small class="text-muted fw-bolder">
+                                        ADVISER <span class="text-danger">*</span>
+                                    </small>
+                                    <select id="adviser" class="form-select form-select-sm border border-primary"
+                                        name="adviser">
+                                        <option disabled selected>(UPDATE)</option>
+                                        @php
+                                            foreach ($advisers as $adviser) {
+                                                $selected = $student->adviser == $adviser->id ? 'selected' : '';
+                                                echo "<option value=\"$adviser->id\" $selected>$adviser->adviser_name</option>";
+                                            }
+                                        @endphp
+                                    </select>
+                                </div>
+                                <div class="col-12 modal-footer mt-3">
+                                    <button type="submit" id="submit_edit_btn2" class="btn btn-success">Save
+                                        Changes</button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
                 @else
                     <div class="card">
                         <div class="card-header">
@@ -546,6 +658,78 @@
                                         </p>
                                     </div>
                                 </section>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <label for=""
+                                class="fw-bolder text-primary h4">{{ strtoupper('Educational Background') }}</label>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md">
+                                    <small class="fw-bolder text-secondary">
+                                        {{ strtoupper('Elementary School Graduate') }}
+                                    </small>
+                                    <p class="form-control form-control-sm border border-primary">
+                                        @if ($student->elem_school)
+                                            {{ $student->elem_school }}
+                                        @else
+                                            <span class="text-danger">Need to update</span>
+                                        @endif
+                                    </p>
+                                </div>
+                                <div class="col-md">
+                                    <small class="fw-bolder text-secondary">
+                                        {{ strtoupper('School Address') }}
+                                    </small>
+                                    <p class="form-control form-control-sm border border-primary">
+                                        BNHS-SINIPIT, BONGABON, N.E
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <small class="fw-bolder text-secondary">
+                                        {{ strtoupper('General Average') }}
+                                    </small>
+                                    <p class="form-control form-control-sm border border-primary">
+                                        @if ($student->gen_average)
+                                            {{ $student->gen_average }}
+                                        @else
+                                            <span class="text-danger">Need to update</span>
+                                        @endif
+                                    </p>
+                                </div>
+                                <div class="col-md-6">
+                                    <small class="fw-bolder text-secondary">
+                                        {{ strtoupper('Last Grade Level Completed') }}
+                                    </small>
+                                    <p class="form-control form-control-sm border border-primary">
+                                        {{ $student->yearLevel()->grade_level }}
+                                    </p>
+                                </div>
+                                <div class="col-md-6">
+                                    <small class="fw-bolder text-secondary">
+                                        {{ strtoupper('School ID') }}
+                                    </small>
+                                    <p class="form-control form-control-sm border border-primary">
+                                        @if ($student->school_id)
+                                            {{ $student->school_id }}
+                                        @else
+                                            {{ $current_year }}-xxxx
+                                        @endif
+                                    </p>
+                                </div>
+                                <div class="col-md-6">
+                                    <small class="fw-bolder text-secondary">
+                                        {{ strtoupper('Adviser') }}
+                                    </small>
+                                    <p class="form-control form-control-sm border border-primary">
+                                        {{ $student->adviser()->adviser_name }}
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>

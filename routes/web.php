@@ -151,7 +151,8 @@ Route::middleware(['auth', 'userAuth:2', 'preventBackHistory'])->group(function 
     Route::get('/user/report', [AppController::class, 'viewReportForm'])->name('user.viewReportForm')->middleware('verified');
     Route::get('/user/appointments', [AppController::class, 'viewAppointments'])->name('user.viewAppointments')->middleware('verified');
     Route::get('/user/code', [AppController::class, 'viewCOC'])->name('user.viewCOC')->middleware('verified');
-    Route::get('/user/profile/', [AppController::class, 'viewProfile'])->name('user.viewProfile')->middleware('verified');
+    // Route::get('/user/profile/', [AppController::class, 'viewProfile'])->name('user.viewProfile')->middleware('verified');
+    Route::get('/user/profile/', [AppController::class, 'viewProfileV2'])->name('user.viewProfile')->middleware('verified');
     Route::get('/user/profile/v2', [AppController::class, 'viewProfileV2'])->name('user.viewProfileV2')->middleware('verified');
 
     //forms
@@ -185,5 +186,4 @@ Route::middleware(['auth', 'userAuth:2', 'preventBackHistory'])->group(function 
     Route::post('user/profile/edit', [ProfileSettingsController::class, 'profile_editor'])->name('student.profile.editor');
     Route::post('user/profile/edit/educational', [ProfileSettingsController::class, 'profile_editor2'])->name('student.profile.editor.educational');
     Route::post('user/profile/edit/v2', [ProfileSettingsController::class, 'profileEditor2'])->name('student.profile.editor.v2');
-    
 });

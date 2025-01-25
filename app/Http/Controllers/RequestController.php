@@ -287,7 +287,7 @@ class RequestController extends Controller
                 'email_notes' => 'Student reason: ' . $request_concern->main_concern,
             ];
 
-            $this->mailRequest($email_data);
+            //$this->mailRequest($email_data);
 
             return redirect()->back()->with(['success_request' => 'You concern has been submitted. Please wait for the counselor response.']);
         } catch (Exception $e) {

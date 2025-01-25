@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Appointments;
+use App\Models\Concerns;
 use Illuminate\Http\Request;
 use App\Models\Student;
 use Illuminate\Support\Facades\Auth;
@@ -46,6 +47,19 @@ class AppController extends Controller
         $status = $this->checkUserAvailability();
 
         return view('user.user_report_form', ['student' => $student, 'grades' => $grades, 'advisers' => $advisers, 'status' => $status]);
+    }
+    public function viewReportFormV2()
+    {
+        $student = Student::where('user_id', Auth::user()->id)->first();
+        $grades = DB::table('grade_level')->get();
+        $advisers = DB::table('advisers')->get();
+        $status = $this->checkUserAvailability();
+        $listConcern = Concerns::where('complainant_id', $student->id)->orderBy('id', 'desc')->get();
+        if ($status == 'Incomplete') {
+            return redirect(route('user.viewProfile'))->with(['message' => 'Please Update your Information']);
+        } else {
+            return view('user.userReportConcern', ['student' => $student, 'grades' => $grades, 'advisers' => $advisers, 'status' => $status, 'listConcern' => $listConcern]);
+        }
     }
 
     public function viewAppointments()

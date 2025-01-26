@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Student;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Intervention\Image\ImageManagerStatic as Image;
@@ -131,9 +132,12 @@ class ProfileSettingsController extends Controller
         try {
 
             $status = DB::table('students')->where('id', $student_id)->update($studentData);
-        } catch (Exception $e) {
+            $user = User::find(Auth::user()->id);
+            $user->username = $request->lrn;
+            $user->save();
+        } catch (\Throwable $e) {
 
-            return redirect()->back()->with('error_update', 'Profile update failed!');
+            return redirect()->back()->with('error_update', 'Profile update failed!' . '\nError: ' . $e->getMessage());
         }
 
         if ($status) {

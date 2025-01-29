@@ -706,9 +706,12 @@
                                     <small class="fw-bolder text-secondary">
                                         {{ strtoupper('Last Grade Level Completed') }}
                                     </small>
-                                    <p class="form-control form-control-sm border border-primary">
-                                        {{ $student->yearLevel()->grade_level }}
-                                    </p>
+                                    @if ($student->yearLevel())
+                                        <p class="form-control form-control-sm border border-primary">
+                                            {{ $student->yearLevel()->grade_level }}
+                                        </p>
+                                    @endif
+
                                 </div>
                                 <div class="col-md-6">
                                     <small class="fw-bolder text-secondary">
@@ -727,7 +730,10 @@
                                         {{ strtoupper('Adviser') }}
                                     </small>
                                     <p class="form-control form-control-sm border border-primary">
-                                        {{ $student->adviser()->adviser_name }}
+                                        @if ($student->adviser())
+                                            {{ $student->adviser()->adviser_name }}
+                                        @endif
+
                                     </p>
                                 </div>
                             </div>

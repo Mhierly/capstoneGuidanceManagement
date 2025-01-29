@@ -233,7 +233,15 @@ class AdminController extends Controller
         }
         return view('admin.admin_appointmentList', compact('events', 'appointmentList', 'student'));
     }
-
+    function viewAppointmentDetails(Request $request)
+    {
+        try {
+            $appointment = Appointments::where('appointment_id', $request->value)->first();
+            return response(compact('appointment'), 200);
+        } catch (\Throwable $th) {
+            return response(['error' => $th->getMessage()]);
+        }
+    }
     private function autoUpdateAppointmentStatus()
     {
         // Get current date and time

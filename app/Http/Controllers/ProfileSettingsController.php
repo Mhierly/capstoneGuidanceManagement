@@ -179,8 +179,9 @@ class ProfileSettingsController extends Controller
         try {
             $account = Auth::user()->student;
             $imageFile = $this->saveImage($request->file('student_profile'), 'public', 'profileImage');
+            $image = Auth::user()->student->student_img == null ? $imageFile : Auth::user()->student->student_img;
             $studentData = array(
-                'student_img' => $imageFile,
+                'student_img' => $image,
                 'email' => $request->input('email'),
                 'firstname' => ucwords(strtolower(trim($request->input('first_name')))),
                 'middlename' =>  ucwords(strtolower(trim($request->input('middle_name')))),

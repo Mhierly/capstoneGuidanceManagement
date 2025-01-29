@@ -62,6 +62,7 @@ Route::middleware(['auth', 'userAuth:1', 'preventBackHistory'])->group(function 
     Route::get('/admin/requests/moral', [AdminController::class, 'viewGoodMoralList'])->name('admin.viewGoodMoralList');
     Route::get('/admin/reports', [AdminController::class, 'viewReports'])->name('admin.viewReports');
     Route::get('/admin/appointments', [AdminController::class, 'viewAppointments'])->name('admin.viewAppointments');
+    Route::get('/admin/appointment/details', [AdminController::class, 'viewAppointmentDetails']);
     Route::get('/admin/forms', [AdminController::class, 'viewForms'])->name('admin.viewForms');
     Route::get('/admin/srdRecords', [AdminController::class, 'viewSrdRecords'])->name('admin.viewSrdRecords');
     Route::get('/admin/addaccount', [AdminController::class, 'viewAddAccount'])->name('admin.viewAddAccount');
@@ -120,7 +121,9 @@ Route::middleware(['auth', 'userAuth:1', 'preventBackHistory'])->group(function 
     Route::post('/admin/student/appointment/email', [AppointmentListController::class, 'emailAppointment'])->name('admin.student.appointment.email');
     Route::post('/admin/student/appointment/remove', [AppointmentListController::class, 'removeAppointmentItem'])->name('admin.student.appointment.remove');
     Route::post('/admin/student/appointment/scheduled', [AppointmentListController::class, 'scheduledAppointment'])->name('adminStoreScheduled');
-    Route::get('/admin/student/appointment/status',[AppointmentListController::class,'fetchAppointment']);
+    Route::post('/admin/student/appointment/duration', [AppointmentListController::class, 'durationAppointment'])->name('adminStoreDuration');
+   
+    Route::get('/admin/student/appointment/status', [AppointmentListController::class, 'fetchAppointment']);
     //form downloads
     Route::get('/admin/forms/download', [FormController::class, 'downloadForm'])->name('admin.forms.download');
     Route::get('/admin/sardo/download', [FormController::class, 'downloadSardo'])->name('admin.sardo.download');

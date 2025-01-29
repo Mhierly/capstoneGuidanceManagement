@@ -154,6 +154,7 @@ class AppointmentListController extends Controller
             if ($appointmentData) {
                 // Check Scheduled
                 $appointmentScheduled = Appointments::where('appointment_date', $request->appointmentDate)
+                    ->where('appointment_time', $request->appointmentTime)
                     ->get();
                 if (count($appointmentScheduled) > 0) {
                     return back()->with(['error' => 'This schedule is already taken. Please select a different one.']);
@@ -161,12 +162,37 @@ class AppointmentListController extends Controller
                     $appointmentData->where('appointment_id', $request->appointmentID)
                         ->update([
                             'appointment_date' => $request->appointmentDate,
-                            'appointment_time' => $request->appointment_time,
+                            'appointment_time' => $request->appointmentTime,
                             'status' => 3
                         ]);
                     return back()->with(['success' => 'Approved Appointment Scheduled']);
                 }
             } else {
+                return back()->with(['error' => 'Missing Id']);
+            }
+        } catch (\Throwable $th) {
+            //return back()->with(['error' => $th->getMessage()]);
+            return $th->getMessage();
+        }
+    }
+    function durationAppointment(Request $request)
+    {
+        $request->validate([
+            'appointment_time_from' => 'required',
+            'appointment_time_to' => 'required'
+        ]);
+        try {
+            $appointmentData = Appointments::where('appointment_id', $request->appointmentID)->first();
+            if ($appointmentData) {
+                $appointmentData->where('appointment_id', $request->appointmentID)
+                    ->update([
+                        'appointment_time_from' => $request->appointment_time_from,
+                        'appointment_time_to' => $request->appointment_time_to,
+                        'status' => 4
+                    ]);
+                return back()->with(['success' => 'Complete Session']);
+            } else {
+                return ['error' => 'Missing Id'];
                 return back()->with(['error' => 'Missing Id']);
             }
         } catch (\Throwable $th) {

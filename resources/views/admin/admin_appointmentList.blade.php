@@ -22,15 +22,15 @@
                                                 : strtoupper($student->name))
                                             : 'MIDSHIPMAN NAME';
                                     @endphp
-                                    <label for="" class="fw-bolder text-primary h4">{{ $applicantName }}</label>
+                                    <label for="" class="fw-bolder text-primary h3">{{ $applicantName }}</label>
                                     <p class="mb-0">
                                         @if ($student)
                                             <small class="badge bg-primary">
                                                 {{ $student->school_id }}
-                                            </small>
+                                            </small> |
                                             <small class="badge bg-primary">
                                                 {{ $student->account->email }}
-                                            </small>-
+                                            </small><br>
                                             <small class="badge bg-primary">
                                                 @if ($student->lrn)
                                                     {{ $student->lrn }}
@@ -40,11 +40,41 @@
                                             </small>
                                         @endif
                                     </p>
-
+                                    <ul class="list-unstyled d-flex justify-content-around mt-3 text-muted">
+                                        <li
+                                            class="{{ request()->input('category') == 'profile' ? 'text-primary fw-bolder' : 'text-muted' }} w-100">
+                                            <a
+                                                href="{{ route('admin.viewAppointments', ['student' => request()->input('student'), 'category' => 'profile']) }}">
+                                                <i class="bi bi-person-circle me-2"></i> Profile
+                                            </a>
+                                        </li>
+                                        <li
+                                            class="{{ request()->input('category') == 'appointment' ? 'text-primary fw-bolder' : 'text-muted' }} w-100">
+                                            <a
+                                                href="{{ route('admin.viewAppointments', ['student' => request()->input('student'), 'category' => 'appointment']) }}">
+                                                <i class="bi bi-calendar-event me-2"></i> Appointment
+                                            </a>
+                                        </li>
+                                        {{--   <li>
+                                            <a href="">
+                                                <i class="bi bi-award-fill me-2"></i> Good Moral
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="">
+                                                <i class="bi bi-file-earmark-x-fill me-2"></i> Drop Request
+                                            </a>
+                                        </li> --}}
+                                    </ul>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    @if (request()->input('category') == 'profile')
+                        @include('cardWidgets.studentProfile')
+                    @else
+                        @include('cardWidgets.studentAppointment')
+                    @endif
                 @else
                     <div class="card mb-2">
                         <div class="row no-gutters">
@@ -68,9 +98,22 @@
             </div>
             <div class="col-md-4">
                 <small class="fw-bolder text-primary">APPOINTMENT REQUEST LIST</small>
+                <div class="card">
+                    <div class="card-body">
+                        <small class="fw-bolder text-muted">STATUS</small>
+                        <select name="" id=""
+                            class="form-select form-select-sm border border-primary select-status">
+                            <option value="1" selected>PENDING</option>
+                            <option value="2">CANCEL</option>
+                            <option value="3">APPROVED</option>
+                            <option value="4">COMPLETED</option>
+                        </select>
+                    </div>
+                </div>
                 @forelse ($appointmentList as $item)
                     <div class="card mb-2">
-                        <a href="{{ route('admin.viewAppointments', ['student' => $item->appointment_id]) }}">
+                        <a
+                            href="{{ route('admin.viewAppointments', ['student' => $item->appointment_id, 'category' => 'appointment']) }}">
                             <div class="row no-gutters">
                                 <div class="col-md-4">
                                     <img src="{{ $item->student->studentProfile() }}" width="100%"
@@ -103,8 +146,25 @@
                             </div>
                         </a>
                     </div>
-
                 @empty
+                    <div class="card mt-2">
+                        <div class="row no-gutters">
+                            <div class="col-md-4">
+
+                            </div>
+                            <div class="col-md p-1">
+                                <div class="card-body p-2">
+                                    <small class="text-muted fw-bolder">STUDENT NAME</small>
+                                    <br>
+                                    <small class="text-muted fw-bolder">SUBJECT</small>
+                                    <br>
+                                    <span class="badge bg-muted"> STATUS <i
+                                            class="bi bi-check-circle-fill text-white"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        </a>
+                    </div>
                 @endforelse
             </div>
         </div>
@@ -480,6 +540,26 @@
                 calendar.render();
 
             });
+            $(document).on('change', '.select-status', function() {
+                let status = $('.select-status').val()
+                alert(status)
+            });
+        </script>
+        <script>
+            @if (session('error'))
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: '{{ session('error') }}'
+                });
+            @elseif (session('success'))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Request sent!',
+                    text: '{{ session('success') }}'
+                });
+            @endif
         </script>
     @endpush
+
 @endsection

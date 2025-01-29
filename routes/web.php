@@ -119,7 +119,7 @@ Route::middleware(['auth', 'userAuth:1', 'preventBackHistory'])->group(function 
     Route::post('/admin/student/appointment/status', [AppointmentListController::class, 'updateAppointmentStatus'])->name('admin.student.appointment.status');
     Route::post('/admin/student/appointment/email', [AppointmentListController::class, 'emailAppointment'])->name('admin.student.appointment.email');
     Route::post('/admin/student/appointment/remove', [AppointmentListController::class, 'removeAppointmentItem'])->name('admin.student.appointment.remove');
-
+    Route::post('/admin/student/appointment/scheduled', [AppointmentListController::class, 'scheduledAppointment'])->name('adminStoreScheduled');
     //form downloads
     Route::get('/admin/forms/download', [FormController::class, 'downloadForm'])->name('admin.forms.download');
     Route::get('/admin/sardo/download', [FormController::class, 'downloadSardo'])->name('admin.sardo.download');

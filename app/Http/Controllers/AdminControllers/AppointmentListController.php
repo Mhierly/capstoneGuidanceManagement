@@ -177,7 +177,18 @@ class AppointmentListController extends Controller
     function fetchAppointment(Request $request)
     {
         try {
-            $appointmentList = Appointments::where('status', $request->status)->get();
+            $appointmentList1 = Appointments::where('status', $request->status)->get();
+            $appointmentList = [];
+            foreach ($appointmentList1 as $key => $appointment) {
+                $appointmentList[] = array(
+                    'appointment_id' => $appointment->appointment_id,
+                    'appointment_subject' => $appointment->subject,
+                    'appointment_reason' => $appointment->reason,
+                    'appointment_status' => $appointment->status,
+                    'name' => strtoupper($appointment->student->lastname . ", " . $appointment->student->firstname),
+                    'image' => $appointment->student->studentProfile()
+                );
+            }
             return response(compact('appointmentList'), 200);
         } catch (\Throwable $th) {
             return response([

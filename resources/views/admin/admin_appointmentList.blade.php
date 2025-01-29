@@ -545,11 +545,74 @@
             });
             $(document).on('change', '.select-status', function() {
                 let status = $('.select-status').val()
-                alert(status)
+                $('.appointment-list').empty();
+                
                 $.get('/admin/student/appointment/status?status=' + status, function(response) {
-                    console.log(response)
+                    if (Array.isArray(response.appointmentList)) {
+                        response.appointmentList.forEach(function(item) {
+                            let cardHtml = `
+            <div class="card mb-2">
+                <a href="/admin/appointments?student=${item.appointment_id}&category=appointment">
+                    <div class="row no-gutters">
+                        <div class="col-md-4">
+                            <img src="${item.image}" width="100%" class="avatar-100 rounded" alt="applicant-profile">
+                        </div>
+                        <div class="col-md p-1">
+                            <div class="card-body p-2">
+                                <small class="text-primary fw-bolder">${item.name}</small>
+                                <br>
+                                <small class="text-muted fw-bolder">${item.appointment_subject}</small>
+                                <br>
+                                ${getStatusBadge(item.appointment_status)}
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        `;
+
+                            $('.appointment-list').append(cardHtml);
+                        });
+                    } else {
+                        $('.appointment-list').append(`
+                        <div class="card mt-2">
+                            <div class="row no-gutters">
+                                <div class="col-md-4">
+
+                                </div>
+                                <div class="col-md p-1">
+                                    <div class="card-body p-2">
+                                        <small class="text-muted fw-bolder">STUDENT NAME</small>
+                                        <br>
+                                        <small class="text-muted fw-bolder">SUBJECT</small>
+                                        <br>
+                                        <span class="badge bg-muted"> STATUS <i
+                                                class="bi bi-check-circle-fill text-white"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            </a>
+                        </div>
+                        `)
+                    }
+
                 })
             });
+
+            function getStatusBadge(status) {
+                switch (status) {
+                    case 1:
+                        return `<span class="badge bg-secondary">PENDING <i class="bi bi-hourglass-bottom text-white"></i></span>`;
+                    case 2:
+                        return `<span class="badge bg-danger">CANCELLED <i class="bi bi-x-circle text-white"></i></span>`;
+                    case 3:
+                        return `<span class="badge bg-success">APPROVED <i class="bi bi-check-circle text-white"></i></span>`;
+                    case 4:
+                        return `<span class="badge bg-primary">COMPLETED <i class="bi bi-check-circle-fill text-white"></i></span>`;
+                    default:
+                        return status;
+                }
+            }
         </script>
         <script>
             @if (session('error'))

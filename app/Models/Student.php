@@ -44,6 +44,7 @@ class Student extends Model
         'current_section',
         'adviser',
         'student_status',
+        'emergency_contact'
     ];
     function account()
     {

@@ -170,6 +170,7 @@ class ProfileSettingsController extends Controller
             'living_with' => 'required',
             'no_of_siblings' => 'required',
             'position' => 'required',
+            'emergency_contact' => 'required'
         ]);
         try {
             $account = Auth::user()->student;
@@ -197,6 +198,7 @@ class ProfileSettingsController extends Controller
                 'living_with' => $request->input('living_with'),
                 'no_of_siblings' => $request->input('no_of_siblings'),
                 'position' => $request->input('position'),
+                'emergency_contact' => $request->emergency_contact
             );
             // Student::find()->update()
             $account->update($studentData);

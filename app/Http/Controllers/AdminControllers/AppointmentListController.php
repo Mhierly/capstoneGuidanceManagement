@@ -174,6 +174,17 @@ class AppointmentListController extends Controller
             return $th->getMessage();
         }
     }
+    function fetchAppointment(Request $request)
+    {
+        try {
+            $appointmentList = Appointments::where('status', $request->status)->get();
+            return response(compact('appointmentList'), 200);
+        } catch (\Throwable $th) {
+            return response([
+                'message' => $th->getMessage()
+            ], 500);
+        }
+    }
     private function mailAppointmentUpdate($data, $email)
     {
         $layout = 'mail_layout.request_update_email';

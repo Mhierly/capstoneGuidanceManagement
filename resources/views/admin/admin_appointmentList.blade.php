@@ -110,26 +110,27 @@
                         </select>
                     </div>
                 </div>
-                @forelse ($appointmentList as $item)
-                    <div class="card mb-2">
-                        <a
-                            href="{{ route('admin.viewAppointments', ['student' => $item->appointment_id, 'category' => 'appointment']) }}">
-                            <div class="row no-gutters">
-                                <div class="col-md-4">
-                                    <img src="{{ $item->student->studentProfile() }}" width="100%"
-                                        class="avatar-100 rounded" alt="applicant-profile">
-                                </div>
-                                <div class="col-md p-1">
-                                    <div class="card-body p-2">
-                                        <small
-                                            class="text-primary fw-bolder">{{ strtoupper($item->student->lastname . ', ' . $item->student->firstname) }}</small>
-                                        <br>
-                                        <small class="text-muted fw-bolder">{{ $item->subject }}</small>
-                                        <br>
-                                        @if ($item->status === 1)
-                                            <span class="badge bg-secondary">PENDING <i
-                                                    class="bi bi-hourglass-bottom text-white"></i></span>
-                                            {{--  @elseif($item->status === 2)
+                <div class="appointment-list">
+                    @forelse ($appointmentList as $item)
+                        <div class="card mb-2">
+                            <a
+                                href="{{ route('admin.viewAppointments', ['student' => $item->appointment_id, 'category' => 'appointment']) }}">
+                                <div class="row no-gutters">
+                                    <div class="col-md-4">
+                                        <img src="{{ $item->student->studentProfile() }}" width="100%"
+                                            class="avatar-100 rounded" alt="applicant-profile">
+                                    </div>
+                                    <div class="col-md p-1">
+                                        <div class="card-body p-2">
+                                            <small
+                                                class="text-primary fw-bolder">{{ strtoupper($item->student->lastname . ', ' . $item->student->firstname) }}</small>
+                                            <br>
+                                            <small class="text-muted fw-bolder">{{ $item->subject }}</small>
+                                            <br>
+                                            @if ($item->status === 1)
+                                                <span class="badge bg-secondary">PENDING <i
+                                                        class="bi bi-hourglass-bottom text-white"></i></span>
+                                                {{--  @elseif($item->status === 2)
                                             <span class="badge bg-danger">CANCELLED <i
                                                     class="bi bi-x-circle text-white"></i></span>
                                         @elseif($item->status === 3)
@@ -138,34 +139,36 @@
                                         @elseif($item->status === 4)
                                             <span class="badge bg-primary">COMPLETED <i
                                                     class="bi bi-check-circle-fill text-white"></i></span> --}}
-                                        @else
-                                            {{ $item->status }}
-                                        @endif
+                                            @else
+                                                {{ $item->status }}
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    @empty
+                        <div class="card mt-2">
+                            <div class="row no-gutters">
+                                <div class="col-md-4">
+
+                                </div>
+                                <div class="col-md p-1">
+                                    <div class="card-body p-2">
+                                        <small class="text-muted fw-bolder">STUDENT NAME</small>
+                                        <br>
+                                        <small class="text-muted fw-bolder">SUBJECT</small>
+                                        <br>
+                                        <span class="badge bg-muted"> STATUS <i
+                                                class="bi bi-check-circle-fill text-white"></i></span>
                                     </div>
                                 </div>
                             </div>
-                        </a>
-                    </div>
-                @empty
-                    <div class="card mt-2">
-                        <div class="row no-gutters">
-                            <div class="col-md-4">
-
-                            </div>
-                            <div class="col-md p-1">
-                                <div class="card-body p-2">
-                                    <small class="text-muted fw-bolder">STUDENT NAME</small>
-                                    <br>
-                                    <small class="text-muted fw-bolder">SUBJECT</small>
-                                    <br>
-                                    <span class="badge bg-muted"> STATUS <i
-                                            class="bi bi-check-circle-fill text-white"></i></span>
-                                </div>
-                            </div>
+                            </a>
                         </div>
-                        </a>
-                    </div>
-                @endforelse
+                    @endforelse
+                </div>
+
             </div>
         </div>
     </div>
@@ -543,6 +546,9 @@
             $(document).on('change', '.select-status', function() {
                 let status = $('.select-status').val()
                 alert(status)
+                $.get('/admin/student/appointment/status?status=' + status, function(response) {
+                    console.log(response)
+                })
             });
         </script>
         <script>

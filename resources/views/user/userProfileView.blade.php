@@ -39,35 +39,6 @@
                                             </small>
                                         @endif
                                     </p>
-                                    {{--  <div class="mt-2">
-                                        @if ($student)
-                                            <small class="badge  border border-secondary text-secondary"
-                                                data-bs-toggle="modal" data-bs-target=".modal-change-course"
-                                                data-bs-toggle="change course" title="">
-                                                CHANGE COURSE
-                                            </small>
-                                            @if ($student->is_alumnia)
-                                                <span class="badge bg-primary float-end">
-                                                    BMA SENIOR HIGH ALUMNUS
-                                                </span>
-                                            @else
-                                                @if ($student->applicant && $student->senior_high_school())
-                                                    <button class="badge border border-primary text-primary"
-                                                        id="btn-alumnia" data-id="{{ base64_encode($student->id) }}">
-                                                        BMA SENIOR HIGH ALUMNUS
-                                                    </button>
-                                                @endif
-                                                @if (Auth::user() && (Auth::user()->email == 'p.banting@bma.edu.ph' || Auth::user()->email == 'k.j.cruz@bma.edu.ph'))
-                                                    <button class="badge border border-primary text-primary"
-                                                        wire:click="dialogBoxSHS({{ $student->id }})">BMA</button>
-                                                @endif
-                                            @endif
-                                        @endif
-                                        <small class="badge  border border-info text-info" title="Reset Password"
-                                            wire:click="resetPassword('{{ $student->id }}')">
-                                            RESET PASSWORD
-                                        </small>
-                                    </div> --}}
                                 </div>
                             </div>
                         </div>

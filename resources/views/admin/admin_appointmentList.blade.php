@@ -86,8 +86,16 @@
                                     <h4 class="card-title text-primary fw-bolder">
                                         STUDENT'S NAME
                                     </h4>
-                                    <p class="card-text fw-bolder">
-                                        <span>LRN</span>
+                                    <p class="mb-0">
+                                        <small class="badge bg-primary">
+                                            STUDENT ID
+                                        </small> |
+                                        <small class="badge bg-primary">
+                                            EMAIL
+                                        </small><br>
+                                        <small class="badge bg-primary">
+                                            LRN
+                                        </small>
                                     </p>
                                 </div>
                             </div>
@@ -173,7 +181,7 @@
         </div>
     </div>
     <div class="appointment-container">
-        <div>
+        {{-- <div>
             <h3 class="text-center">Appointment List</h3>
         </div>
 
@@ -190,7 +198,7 @@
                     <th>Action</th>
                 </tr>
             </thead>
-        </table>
+        </table> --}}
 
         <div class="mt-5">
             <h3 class="text-center">Appointment Calendar</h3>
@@ -546,7 +554,7 @@
             $(document).on('change', '.select-status', function() {
                 let status = $('.select-status').val()
                 $('.appointment-list').empty();
-                
+
                 $.get('/admin/student/appointment/status?status=' + status, function(response) {
                     if (Array.isArray(response.appointmentList)) {
                         response.appointmentList.forEach(function(item) {

@@ -150,8 +150,8 @@ class ProfileSettingsController extends Controller
     }
     function profileEditor2(Request $request)
     {
-        $request->validate([
-            'student_profile' => 'required',
+        $validation = [
+
             'last_name' => 'required',
             'first_name' => 'required',
             'birthdate' => 'required',
@@ -171,7 +171,11 @@ class ProfileSettingsController extends Controller
             'no_of_siblings' => 'required',
             'position' => 'required',
             'emergency_contact' => 'required'
-        ]);
+        ];
+        if (Auth::user()->student->student_img == null) {
+            $validation['student_profile'] = 'required'; // Correct way to add a new key-value pair
+        }
+        $request->validate($validation);
         try {
             $account = Auth::user()->student;
             $imageFile = $this->saveImage($request->file('student_profile'), 'public', 'profileImage');

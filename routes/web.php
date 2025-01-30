@@ -70,6 +70,7 @@ Route::middleware(['auth', 'userAuth:1', 'preventBackHistory'])->group(function 
     Route::get('/admin/forms', [AdminController::class, 'viewForms'])->name('admin.viewForms');
     Route::get('/admin/srdRecords', [AdminController::class, 'viewSrdRecords'])->name('admin.viewSrdRecords');
     Route::get('/admin/addaccount', [AdminController::class, 'viewAddAccount'])->name('admin.viewAddAccount');
+    Route::get('/admin/addAdviser', [AdminController::class, 'viewAddAdviser'])->name('admin.viewAddAdviser');
 
     //forms
     Route::get('/admin/form/moral', [AdminController::class, 'viewGoodMoralCert'])->name('admin.viewGoodMoralCert');
@@ -150,6 +151,9 @@ Route::middleware(['auth', 'userAuth:1', 'preventBackHistory'])->group(function 
     //counselor crud
     Route::post('/admin/counselor/add', [CounselorListController::class, 'addCounselor'])->name('admin.counselor.add');
     Route::post('/admin/counselor/edit', [CounselorListController::class, 'editCounselor'])->name('admin.counselor.edit');
+
+    // Teacher
+    Route::post('/admin/Teacher/add', [AdminController::class, 'addTeacher'])->name('admin.teacher.add');
 });
 
 //STUDENTS

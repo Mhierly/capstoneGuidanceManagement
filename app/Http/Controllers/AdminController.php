@@ -429,8 +429,23 @@ class AdminController extends Controller
     {
         return view('admin.admin_add_account');
     }
+    function viewAddAdviser()
+    {
+        $teacher = DB::table('advisers')->get();
+        return view('admin.adminAddAdviser', compact('teacher'));
+    }
+    function addTeacher(Request $request)
+    {
+        try {
+            DB::table('advisers')->insert([
+                'adviser_name' => ucwords(strtolower($request->add_firstname . " " . $request->add_surname))
+            ]);
 
-
+            return back()->with(['success' => 'Saved']);
+        } catch (\Throwable $th) {
+            return response(['error' => $th->getMessage()]);
+        }
+    }
     private function mailCancelUpdate($data, $email)
     {
         $layout = 'mail_layout.request_update_email';

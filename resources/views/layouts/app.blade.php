@@ -193,6 +193,10 @@
                         </a>
                     @endif
                     @if (Auth::user()->user_type == 1)
+                        <a class="sidebar-link" href="{{ route('admin.viewAddAdviser') }}">
+                            <i class="bi bi-person-fill-add"></i>
+                            <span class="nav-text">Add Teacher</span>
+                        </a>
                         <a class="sidebar-link" href="{{ route('admin.viewAddAccount') }}">
                             <i class="bi bi-person-fill-add"></i>
                             <span class="nav-text">Add Counselor</span>

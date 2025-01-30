@@ -79,6 +79,10 @@ class Student extends Model
     {
         return DB::table('grade_level')->where('id', $this->current_grade)->first();
     }
+    function concernList()
+    {
+        return $this->hasMany(Concerns::class, 'complainant_id')->orderBy('id', 'desc');
+    }
 }
 
 

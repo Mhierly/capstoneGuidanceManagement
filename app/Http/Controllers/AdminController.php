@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\Mailer;
 use App\Models\Appointments;
+use App\Models\Concerns;
+use App\Models\Student;
 use Carbon\Carbon;
 
 class AdminController extends Controller
@@ -200,7 +202,34 @@ class AdminController extends Controller
 
         return view('admin.admin_reportList');
     }
+    function viewReportsV2(Request $request)
+    {
+        $complainantList = Concerns::where('status', 1)
+            ->join('students', 'student_concern.complainant_id', '=', 'students.id')
+            ->select('student_concern.id as concern_id', 'student_concern.main_concern', 'students.firstName', 'students.lastName', 'students.id', 'student_concern.status')
+            ->get();
+        $complainantList = Concerns::where('status', 1)->with('student')->get();
+        $concernList = [];
 
+        foreach ($complainantList as $value) {
+            $student = $value->student;
+
+            $concernList[] = [
+                'concern_id'      => $value->id,
+                'main_concern'    => $value->main_concern,
+                'complainant'     => $student ? strtoupper($student->firstname . " " . $student->lastname) : 'Unknown',
+                'complainantImage' => $student ? $student->studentProfile() : null,
+                'status'          => $value->status
+            ];
+        }
+        $student = [];
+        if ($request->view) {
+            $data = Concerns::where('id', $request->view)->first();
+            $student = $data->student;
+        }
+        //return $concernList;
+        return view('admin.studentReportListView', compact('concernList', 'student'));
+    }
     public function viewAppointments(Request $request)
     {
         $this->autoUpdateAppointmentStatus();

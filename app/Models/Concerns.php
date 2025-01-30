@@ -40,5 +40,8 @@ class Concerns extends Model
         'date_to_pickup',
         'time_pickup',
     ];
-
+    function student()
+    {
+        return $this->belongsTo(Student::class, 'complainant_id');
+    }
 }

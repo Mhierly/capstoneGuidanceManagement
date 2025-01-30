@@ -61,6 +61,8 @@ Route::middleware(['auth', 'userAuth:1', 'preventBackHistory'])->group(function 
     Route::get('/admin/requests/drop', [AdminController::class, 'viewDropRequestList'])->name('admin.viewDropRequestList');
     Route::get('/admin/requests/moral', [AdminController::class, 'viewGoodMoralList'])->name('admin.viewGoodMoralList');
     Route::get('/admin/reports', [AdminController::class, 'viewReports'])->name('admin.viewReports');
+    Route::get('/admin/reports/v2', [AdminController::class, 'viewReportsV2'])->name('admin.viewReports');
+
     Route::get('/admin/appointments', [AdminController::class, 'viewAppointments'])->name('admin.viewAppointments');
     Route::get('/admin/appointment/details', [AdminController::class, 'viewAppointmentDetails']);
     Route::get('/admin/forms', [AdminController::class, 'viewForms'])->name('admin.viewForms');
@@ -103,7 +105,7 @@ Route::middleware(['auth', 'userAuth:1', 'preventBackHistory'])->group(function 
     Route::post('/admin/student/report/status', [ReportListController::class, 'updateConcernStatus'])->name('admin.student.concern.status');
     Route::get('/admin/student/report/download', [ReportListController::class, 'downloadConcernInformation'])->name('admin.student.concern.download');
     Route::post('/admin/student/report/remove', [ReportListController::class, 'removeStudentConcern'])->name('admin.student.concern.remove');
-
+    Route::get('/admin/student/report/stream', [ReportListController::class, 'streamConcern'])->name('admin.studentConcernStream');
     //student drop functions
     Route::post('/admin/student/drop/approve', [DropListController::class, 'approveDropItem'])->name('admin.student.drop.approve');
     Route::post('/admin/student/drop/status', [DropListController::class, 'updateDropStatus'])->name('admin.student.drop.status');
@@ -122,7 +124,7 @@ Route::middleware(['auth', 'userAuth:1', 'preventBackHistory'])->group(function 
     Route::post('/admin/student/appointment/remove', [AppointmentListController::class, 'removeAppointmentItem'])->name('admin.student.appointment.remove');
     Route::post('/admin/student/appointment/scheduled', [AppointmentListController::class, 'scheduledAppointment'])->name('adminStoreScheduled');
     Route::post('/admin/student/appointment/duration', [AppointmentListController::class, 'durationAppointment'])->name('adminStoreDuration');
-   
+
     Route::get('/admin/student/appointment/status', [AppointmentListController::class, 'fetchAppointment']);
     //form downloads
     Route::get('/admin/forms/download', [FormController::class, 'downloadForm'])->name('admin.forms.download');

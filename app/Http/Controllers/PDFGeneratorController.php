@@ -22,9 +22,18 @@ class PDFGeneratorController extends Controller
         try {
             $pdf = PDF::loadView($layout, $data);
             // Save the PDF to the public folder
-            $pdf->save(public_path('uploads/'.$filename));
+            $pdf->save(public_path('uploads/' . $filename));
 
             return response()->json(['message' => 'PDF generated and saved successfully', 'file' => $filename], 200);
+        } catch (\Exception $e) {
+            throw new \Exception('Failed to generate PDF: ' . $e->getMessage());
+        }
+    }
+    function viewPDF($data, $layout, $filename = 'generated.pdf')
+    {
+        try {
+            $pdf = PDF::loadView($layout, $data);
+            return $pdf->stream($filename);
         } catch (\Exception $e) {
             throw new \Exception('Failed to generate PDF: ' . $e->getMessage());
         }

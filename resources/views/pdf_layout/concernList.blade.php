@@ -11,6 +11,21 @@
             width: 100%;
             border-collapse: collapse;
         }
+
+        .certificate-footer {
+            margin-top: 40px;
+            text-align: left;
+        }
+
+        .certificate-footer .signature {
+            display: inline-block;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .certificate-footer .signature strong {
+            border-bottom: 2px solid black;
+        }
     </style>
     <div class="title" style="align-content: center; text-align:center">
         <h2><b>DISCIPLINARY CASE STUDENT</b></h2>
@@ -43,4 +58,13 @@
             @endforelse
         </tbody>
     </table>
+
+
+    <div class="certificate-footer">
+        <p>Prepared by:</p>
+        <div class="signature">
+            <strong>ARLENE M. BALARIA</strong><br>
+            <span>Guidance Councilor</span>
+        </div>
+    </div>
 @endsection

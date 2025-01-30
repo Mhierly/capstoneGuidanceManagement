@@ -75,7 +75,45 @@ class AdminController extends Controller
 
         return view('admin.admin_studentList', ['grade_levels' => $grade_levels, 'advisers' => $advisers]);
     }
+    function viewStudentListV2(Request $request)
+    {
+        try {
+            $studentsList = Student::all();
+            $student = [];
+            $studentList = [];
+            if ($request->student) {
+                $student = Student::find($request->student);
+            }
+            foreach ($studentsList as $value) {
+                $studentList[] = [
+                    'id' => $value->id,
+                    'name' => strtoupper($value->firstname . " " . $value->lastname),
+                    'image' => $value->studentProfile(),
+                    'email' => $value->account->email,
+                    'status' => $this->checkUserAvailability($value->id)
+                ];
+            }
+            //return $studentList;
+            return view('admin.studentListView', compact('studentList', 'student'));
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+    }
+    private function checkUserAvailability($id)
+    {
+        $student = Student::where('id', $id)->first();
+        $status = true;
+        if ($student) {
+            $attributes = collect($student->getAttributes())->except('middlename', 'student_img', 'suffix', 'lrn', 'elem_school');
+            if ($attributes->contains(function ($value) {
+                return is_null($value);
+            })) {
+                $status = false;
+            }
+        }
 
+        return $status;
+    }
     public function viewCreateModule()
     {
         return view('admin.admin_createModule');

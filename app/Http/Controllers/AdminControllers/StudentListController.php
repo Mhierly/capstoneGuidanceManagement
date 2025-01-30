@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\AdminControllers;
+
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
@@ -9,11 +10,14 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\Mailer;
 use Exception;
 use App\Http\Controllers\PDFGeneratorController;
+use App\Models\Student;
 use Carbon\Carbon;
+use PDF;
 
 class StudentListController extends Controller
 {
-    public function UpdateStudentInfo(Request $request){
+    public function UpdateStudentInfo(Request $request)
+    {
 
         $studentData = [
             'lrn' => $request->input('lrn'),
@@ -27,14 +31,14 @@ class StudentListController extends Controller
 
         // dd($studentData);
 
-        try{
+        try {
             $status = DB::table('students')->where('id', $request->input('student_id'))->update($studentData);
-        }catch(Exception $e){
+        } catch (Exception $e) {
             dd($e);
             return redirect()->back()->with('error_update', 'Profile updated failed!');
         }
 
-        if($status){
+        if ($status) {
             // if($check_email != $request->input('profile_email')){
             //     $update_user_email = DB::table('users')->where('id', Auth::user()->id)->update(['email' => $request->input('profile_email')]);
 
@@ -45,7 +49,7 @@ class StudentListController extends Controller
 
             // $update_time = DB::table('students')->where('id', $student_id)->update([]);
             return redirect()->back()->with('status_update', 'Profile updated successfully!');
-        }else{
+        } else {
             return redirect()->back()->with('status_no_update', 'No changes made.');
         }
     }
@@ -84,7 +88,7 @@ class StudentListController extends Controller
         $current_section = DB::table('sections')->where('id', $student->current_section)->value('section_name');
         $adviser = DB::table('advisers')->where('id', $student->adviser)->value('adviser_name');
         $birthday = Carbon::createFromFormat('Y-m-d', $student->birthday)->format('F j, Y');
-        $last_update =  Carbon::parse($student->updated_at)->format('F j, Y'). ' at ' .Carbon::parse($student->updated_at)->format('g:i a');
+        $last_update =  Carbon::parse($student->updated_at)->format('F j, Y') . ' at ' . Carbon::parse($student->updated_at)->format('g:i a');
         $birthDateCarbon = Carbon::createFromFormat('Y-m-d', $student->birthday);
 
         $currentDate = Carbon::now();
@@ -95,20 +99,21 @@ class StudentListController extends Controller
         $student_municipality = DB::table('philippine_cities')->where('city_municipality_code', $student->municipality)->value('city_municipality_description') ?? 'N/A';
         $student_baranggay = DB::table('philippine_barangays')->where('barangay_code', $student->baranggay)->value('barangay_description') ?? 'N/A';
 
-        if($current_grade == 'Grade 7'){
+        if ($current_grade == 'Grade 7') {
             $last_grade = 'Grade 6';
-        }else if($current_grade == 'Grade 8'){
+        } else if ($current_grade == 'Grade 8') {
             $last_grade = 'Grade 7';
-        }else if($current_grade == 'Grade 9'){
+        } else if ($current_grade == 'Grade 9') {
             $last_grade = 'Grade 8';
-        }if($current_grade == 'Grade 10'){
+        }
+        if ($current_grade == 'Grade 10') {
             $last_grade = 'Grade 9';
         }
 
         $student_info = [
             'student_img' => $profile_img,
             'email' => $student->email,
-            'name' => $student->firstname.' '.$student->middlename.' '.$student->lastname.' '.$student->suffix,
+            'name' => $student->firstname . ' ' . $student->middlename . ' ' . $student->lastname . ' ' . $student->suffix,
             'lrn' => $student->lrn,
             'house_no_street' => $student->house_no_street,
             'baranggay' => $student_baranggay,
@@ -136,7 +141,7 @@ class StudentListController extends Controller
             'adviser' => $adviser,
         ];
 
-        $filename = $student->firstname . '_' . $student->lastname .'.pdf';
+        $filename = $student->firstname . '_' . $student->lastname . '.pdf';
         $layout = 'pdf_layout.pdf_student_info';
 
         try {
@@ -144,6 +149,18 @@ class StudentListController extends Controller
             return $pdfGenerator->generatePdf($student_info, $layout, $filename);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+    function viewStudentInfo(Request $request)
+    {
+        try {
+            $student = Student::find($request->student);
+            $studentImage = $student->studentProfile();
+            $pdf = PDF::loadView('pdf_layout.studentInformation', compact('student', 'studentImage'));
+            $pdf->setPaper([0, 0, 612.00, 1008.00], 'portrait');
+            return $pdf->stream('student-information.pdf');
+        } catch (\Throwable $th) {
+            //throw $th;
         }
     }
 }

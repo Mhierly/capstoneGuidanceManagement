@@ -55,7 +55,9 @@ Route::middleware(['guest', 'preventBackHistory'])->group(function () {
 Route::middleware(['auth', 'userAuth:1', 'preventBackHistory'])->group(function () {
     //sidebars
     Route::get('/admin', [AdminController::class, 'viewDashboard'])->name('admin.viewDashboard');
-    Route::get('/admin/students', [AdminController::class, 'viewStudentList'])->name('admin.viewStudentList');
+    Route::get('/admin/students', [AdminController::class, 'viewStudentList'])->name('admin.viewStudentListV2');
+    Route::get('/admin/students/v2', [AdminController::class, 'viewStudentListV2'])->name('admin.viewStudentList');
+    Route::get('/admin/student/view-pdf', [StudentListController::class, 'viewStudentInfo'])->name('admin.studentInformationPDF');
     Route::get('/admin/createmodule', [AdminController::class, 'viewCreateModule'])->name('admin.viewCreateModule');
     Route::get('/admin/coc', [AdminController::class, 'viewCOC'])->name('admin.viewCOC');
     Route::get('/admin/requests/drop', [AdminController::class, 'viewDropRequestList'])->name('admin.viewDropRequestList');

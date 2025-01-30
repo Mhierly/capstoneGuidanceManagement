@@ -350,7 +350,7 @@ class ReportListController extends Controller
         $layout = 'pdf_layout.pdf_report_info';
 
         try {
-            return $report_info;
+           // return $report_info;
             /*   $pdfGenerator = new PDFGeneratorController();
             return $pdfGenerator->viewPDF($report_info, $layout, $filename); */
             $data = $report_info;

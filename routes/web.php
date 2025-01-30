@@ -60,9 +60,9 @@ Route::middleware(['auth', 'userAuth:1', 'preventBackHistory'])->group(function 
     Route::get('/admin/coc', [AdminController::class, 'viewCOC'])->name('admin.viewCOC');
     Route::get('/admin/requests/drop', [AdminController::class, 'viewDropRequestList'])->name('admin.viewDropRequestList');
     Route::get('/admin/requests/moral', [AdminController::class, 'viewGoodMoralList'])->name('admin.viewGoodMoralList');
-    Route::get('/admin/reports', [AdminController::class, 'viewReports'])->name('admin.viewReports');
+    Route::get('/admin/reports', [AdminController::class, 'viewReports'])->name('admin.viewReportsV2');
     Route::get('/admin/reports/v2', [AdminController::class, 'viewReportsV2'])->name('admin.viewReports');
-
+    Route::get('/admin/reports/generate-pdf', [AdminController::class, 'generateConcern'])->name('admin.concernList');
     Route::get('/admin/appointments', [AdminController::class, 'viewAppointments'])->name('admin.viewAppointments');
     Route::get('/admin/appointment/details', [AdminController::class, 'viewAppointmentDetails']);
     Route::get('/admin/forms', [AdminController::class, 'viewForms'])->name('admin.viewForms');
@@ -154,7 +154,7 @@ Route::middleware(['auth', 'userAuth:1', 'preventBackHistory'])->group(function 
 Route::middleware(['auth', 'userAuth:2', 'preventBackHistory'])->group(function () {
     //sidebars
     Route::get('/user', [AppController::class, 'viewDashboard'])->name('user.viewDashboard')->middleware('verified');
-    Route::get('/user/report', [AppController::class, 'viewReportForm'])->name('user.viewReportForm')->middleware('verified');
+    Route::get('/user/report', [AppController::class, 'viewReportForm'])->name('user.viewReportFormV2')->middleware('verified');
     Route::get('/user/report/v2', [AppController::class, 'viewReportFormV2'])->name('user.viewReportForm')->middleware('verified');
     Route::get('/user/appointments', [AppController::class, 'viewAppointments'])->name('user.viewAppointments')->middleware('verified');
     Route::get('/user/code', [AppController::class, 'viewCOC'])->name('user.viewCOC')->middleware('verified');

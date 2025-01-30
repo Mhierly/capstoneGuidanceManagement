@@ -12,6 +12,7 @@ use App\Models\Appointments;
 use App\Models\Concerns;
 use App\Models\Student;
 use Carbon\Carbon;
+use PDF;
 
 class AdminController extends Controller
 {
@@ -229,6 +230,15 @@ class AdminController extends Controller
         }
         //return $concernList;
         return view('admin.studentReportListView', compact('concernList', 'student'));
+    }
+    function generateConcern(Request $request)
+    {
+        $concernList = Concerns::where('status', 3)->get();
+        $pdf = PDF::loadView('pdf_layout.concernList', compact('concernList'));
+        $pdf->setPaper([0, 0, 612.00, 1008.00], 'portrait');
+        return $pdf->stream('concernList.pdf');
+
+        //return $pdf->download($filename);
     }
     public function viewAppointments(Request $request)
     {

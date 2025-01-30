@@ -203,14 +203,14 @@
                                             <small class="text-muted fw-bolder">
                                                 PARENT'S / GUARDIAN<span class="text-danger">*</span>
                                             </small>
-                                            <input type="text" name="offender_parent_guardian" required
+                                            <input type="text" name="offender_parent_guardian"
                                                 class="form-control form-control-sm border border-primary">
                                         </div>
                                         <div class="col-md">
                                             <small class="text-muted fw-bolder">
                                                 CONTACT NUMBER<span class="text-danger">*</span>
                                             </small>
-                                            <input type="number" min="0" name="offender_parent_contact" required
+                                            <input type="number" min="0" name="offender_parent_contact"
                                                 class="form-control form-control-sm border border-primary">
                                         </div>
                                     </div>

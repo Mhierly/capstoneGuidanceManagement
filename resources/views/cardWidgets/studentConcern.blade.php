@@ -39,10 +39,11 @@
                             @if ($item->status === 1)
                                 <a class="badge bg-success viewConcernModal" data-bs-toggle="modal"
                                     data-bs-target="#viewConcern" data-value="{{ $item->id }}"
-                                    data-route="{{ route('admin.studentConcernStream', ['concern' => ':id']) }}">
+                                    data-route="{{ route('admin.studentConcernStream', ['concern' => $item->id]) }}">
                                     VIEW
                                 </a>
-                                <a class="badge bg-primary">APPROVED</a>
+                                <a class="badge bg-primary approvedConcernModal" data-bs-toggle="modal"
+                                    data-bs-target="#approvedConcern" data-value="{{ $item->id }}">APPROVED</a>
                                 <a class="badge bg-danger remove-concern" data-student={{ $item->complainant_id }}
                                     data-concernid={{ $item->id }}>
                                     REMOVE
@@ -71,7 +72,7 @@
     </div>
 </div>
 <div class="modal fade" id="viewConcern" tabindex="-1" aria-labelledby="viewConcernLabel" aria-hidden="true">
-    <div class="modal-dialog modal-md">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title fs-5" id="viewConcernLabel">STUDENT CONCERN</h3>
@@ -79,74 +80,44 @@
                 </button>
             </div>
             <div class="modal-body">
-                <iframe src="" frameborder="0" class="reportConcern"></iframe>
+                <iframe src="" frameborder="0" class="reportConcern"
+                    style="width: 100%; height:1000px "></iframe>
             </div>
         </div>
     </div>
 </div>
-<div class="modal fade" id="edit_profile" tabindex="-1" aria-labelledby="edit_profileLabel" aria-hidden="true">
+<div class="modal fade" id="approvedConcern" tabindex="-1" aria-labelledby="approvedConcernLabel" aria-hidden="true">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title fs-5" id="edit_profileLabel">REQUEST APPOINTMENT DETAILS</h3>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                </button>
+                <h5 class="modal-title fs-5 text-danger" id="concern_editorLabel">Take Action!</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="row">
-                    <div class="col-md">
-                        <small class="fw-bolder text-muted">SUBJECT</small>
-                        <label for=""
-                            class="form-control form-control-sm border border-primary subject"></label>
-                    </div>
-                    <div class="col-md-4">
-                        <small class="fw-bolder text-muted">REQUEST DATE</small>
-                        <label for=""
-                            class="form-control form-control-sm border border-primary request-date"></label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <small class="fw-bolder text-muted">REASON</small>
-                        <label for="" class="form-control form-control-sm border border-primary reason"></label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md">
-                        <small class="fw-bolder text-muted">SCHEDULED DATE</small>
-                        <label for=""
-                            class="form-control form-control-sm border border-primary scheduled-date"></label>
-                    </div>
-                    <div class="col-md">
-                        <small class="fw-bolder text-muted">SCHEDULED TIME</small>
-                        <label for=""
-                            class="form-control form-control-sm border border-primary scheduled-time"></label>
-                    </div>
-                </div>
-                <form action="{{ route('adminStoreScheduled') }}" method="POST">
+                <form class="row g-3" method="POST" action="{{ route('admin.student.concern.action') }}">
                     @csrf
-                    <input type="hidden" name="appointmentID" id="appointmentInput">
-                    <div class="row">
-                        <div class="form-group col-md">
-                            <small class="fw-bolder text-muted">APPOINTMENT DATE:</small>
-                            <input type="date" class="form-control form-control-sm border border-primary"
-                                id="appointmentDate" name="appointmentDate" required>
-                            @error('appointmentDate')
-                                <div class="alert alert-danger">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="form-group col-md">
-                            <small class="fw-bolder text-muted">APPOINTMENT TIME:</small>
-                            <input type="time" class="form-control form-control-sm border border-primary"
-                                id="appointmentTime" name="appointmentTime" required>
-                            @error('appointmentTime')
-                                <div class="alert alert-danger">{{ $message }}</div>
-                            @enderror
-                        </div>
+                    <input type="text" name="concern_id" id="concern_id" hidden>
+                    <div class="col-md-12">
+                        <small class="fw-bolder text-muted">PROBLEM PRESENTED:</small>
+
+                        <p id="concern"
+                            class="fw-bold text-capitalize form-control form-control-sm border border-primary"></p>
                     </div>
-                    <button class="btn btn-primary float-end mt-3">
-                        SUBMIT
-                    </button>
+                    <div class="col-md-12">
+                        <label class="fw-bolder text-muted">Action Taken:</label>
+                        <input type="text" id="actiontaken"
+                            class="form-control form-control-sm border border-primary" name="actiontaken"
+                            placeholder="Take action on this concern!" required>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="fw-bolder text-muted">Recommendation:</label>
+                        <input type="text" id="rec" class="form-control form-control-sm border border-primary"
+                            name="rec" placeholder="What are the guidance's will recommend in this concern?"
+                            required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -224,9 +195,36 @@
     </div>
 </div>
 <script>
+    $(document).on('click', '.approvedConcernModal', function() {
+        var id = $(this).data('value');
+        console.log(id)
+        $('#concern_id').val(id)
+        $.ajax({
+            url: '{{ route('fetch.report.information') }}',
+            type: 'GET',
+            data: {
+                id: id,
+                _token: $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(response) {
+                console.log(response)
+                if (response) {
+                    $('#concern').html(response.main_concern);
+                    $('#actiontaken').val(response.action_taken);
+                    $('#rec').val(response.recommendation);
+                } else {
+                    alert('No data found. Please try again.');
+                }
+            },
+            error: function(xhr, status, error) {
+                alert(error);
+            }
+        });
+    })
     $(document).on('click', '.viewConcernModal', function() {
         var id = $(this).data('value');
-        var route = $(this).data('route').replace(':id', id); // Replace placeholder with actual ID
+        var route = $(this).data('route')
+        console.log(route)
         $(".reportConcern").attr("src", route);
     })
     $(document).on('click', '.btn-appointment', function() {

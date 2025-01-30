@@ -107,7 +107,7 @@
 
             </div>
             <div class="col-md-4">
-                <small class="fw-bolder text-primary">APPOINTMENT REQUEST LIST</small>
+                <small class="fw-bolder text-primary">LIST OF STUDENT CONCERN</small>
                 <div class="card">
                     <div class="card-body">
                         <small class="fw-bolder text-muted">STATUS</small>
@@ -118,9 +118,11 @@
                             <option value="3">APPROVED</option>
                             <option value="4">COMPLETED</option>
                         </select>
+
+                        <a href="{{ route('admin.concernList') }}" target="_blank" class="btn btn-primary w-100 mt-2">GENERATE REPORT</a>
                     </div>
                 </div>
-                <div class="appointment-list">
+                <div class="appointment-list mt-3">
                     @forelse ($concernList as $item)
                         <div class="card mb-2">
                             <a

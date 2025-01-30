@@ -1,0 +1,171 @@
+.report-content {
+    font-family: 'Times New Roman', Times, serif;
+    margin: auto;
+    /* text-align: center; */
+}
+
+.sub-title h4 {
+    font-size: 18px;
+    margin-bottom: 0;
+}
+
+.report-content {
+    font-family: 'Times New Roman', Times, serif;
+    margin: auto;
+    /* text-align: center; */
+}
+
+.sub-title h4 {
+    font-size: 18px;
+    margin-bottom: 0;
+}
+
+.deped {
+    font-family: 'Old English Text MT', serif;
+}
+
+.table-title {
+    margin: 0;
+    margin-left: -30px;
+    text-align: left;
+}
+
+.title {
+    margin: 0;
+    margin-left: -30px;
+    text-align: left;
+}
+
+.table-container {
+    margin: 1rem auto;
+    /* Center the table-container */
+    text-align: left;
+    max-width: 100%;
+    /* Set a maximum width for the table-container */
+}
+
+.table-container td {
+    padding: 2px;
+    width: 50%;
+}
+
+h5 {
+    padding: 2px;
+    margin: 0;
+}
+
+.table-container td>span {
+    border-bottom: 1px solid black;
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+.description p {
+    border-bottom: 1px solid black;
+    text-transform: capitalize;
+    text-align: start;
+    font-size: 14px;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.header h3,
+.header h4 {
+    margin: 5px 0;
+}
+
+img {
+    width: 100px;
+    height: auto;
+}
+
+table {
+    width: 100%;
+    font-size: 14px;
+}
+
+tr {
+    width: 100%;
+}
+
+td {
+    width: 50%;
+}
+
+.deped {
+    font-family: 'Old English Text MT', serif;
+}
+
+.table-title {
+    margin: 0;
+    margin-left: -30px;
+    text-align: left;
+}
+
+.title {
+    margin: 0;
+    margin-left: -30px;
+    text-align: left;
+}
+
+.table-container {
+    margin: 1rem auto;
+    /* Center the table-container */
+    text-align: left;
+    max-width: 100%;
+    /* Set a maximum width for the table-container */
+}
+
+.table-container td {
+    padding: 2px;
+    width: 50%;
+}
+
+h5 {
+    padding: 2px;
+    margin: 0;
+}
+
+.table-container td>span {
+    border-bottom: 1px solid black;
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+.description p {
+    border-bottom: 1px solid black;
+    text-transform: capitalize;
+    text-align: start;
+    font-size: 14px;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.header h3,
+.header h4 {
+    margin: 5px 0;
+}
+
+img {
+    width: 100px;
+    height: auto;
+}
+
+table {
+    width: 100%;
+    font-size: 14px;
+}
+
+tr {
+    width: 100%;
+}
+
+td {
+    width: 50%;
+}

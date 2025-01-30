@@ -13,6 +13,7 @@ use App\Mail\Mailer;
 use Exception;
 use Carbon\Carbon;
 use App\Models\Appointments;
+use App\Models\Concerns;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class ReportListController extends Controller
@@ -283,81 +284,21 @@ class ReportListController extends Controller
     }
     public function streamConcern(Request $request)
     {
-        $data = DB::table('student_concern')
-            ->where('id', $request->concern)
-            ->first();
+        $concern = Concerns::find($request->concern);
 
-        if (!$data) {
-            return response()->json(['error' => 'Concern not found'], 404);
+        if (!$concern) {
+            return response()->json(['error' => 'Concern not found.'], 404);
         }
 
-        // Fetch complainant details
-        $complainant = DB::table('students')
-            ->where('id', $data->complainant_id)
-            ->first();
-
-        // Fetch victim and offender grade & section in a single query using `whereIn()`
-        $gradeIds = [$data->victim_grade, $data->offender_grade];
-        $sectionIds = [$data->victim_section, $data->offender_section];
-
-        $grades = DB::table('grade_level')
-            ->whereIn('id', $gradeIds)
-            ->pluck('grade_level', 'id');
-
-        $sections = DB::table('sections')
-            ->whereIn('id', $sectionIds)
-            ->pluck('section_name', 'id');
-
-        // Fetch complainant's address details
-        $province = DB::table('philippine_provinces')
-            ->where('province_code', $complainant->province)
-            ->value('province_description') ?? 'N/A';
-
-        $municipality = DB::table('philippine_cities')
-            ->where('city_municipality_code', $complainant->municipality)
-            ->value('city_municipality_description') ?? 'N/A';
-
-        $barangay = DB::table('philippine_barangays')
-            ->where('barangay_code', $complainant->baranggay)
-            ->value('barangay_description') ?? 'N/A';
-
-        // Construct report info
-        $report_info = [
-            'victim_name' => $data->victim_name,
-            'victim_age' => $data->victim_age,
-            'victim_gender' => $data->victim_gender,
-            'victim_grade' => ($grades[$data->victim_grade] ?? 'N/A') . ' - ' . ($sections[$data->victim_section] ?? 'N/A'),
-            'victim_parent_guardian' => $data->victim_parent_guardian,
-            'victim_parent_contact' => $data->victim_parent_contact,
-            'victim_class_adviser' => $data->victim_class_adviser,
-            'complainant_name' => trim("{$complainant->firstname} {$complainant->middlename} {$complainant->lastname} {$complainant->suffix}"),
-            'complainant_address' => "{$complainant->house_no_street}, $barangay, $municipality, $province",
-            'complainant_contact' => $complainant->contact_no,
-            'relation_to_victim' => $data->relation_to_victim,
-            'offender_name' => $data->offender_name,
-            'offender_age' => $data->offender_age,
-            'offender_gender' => $data->offender_gender,
-            'offender_grade' => ($grades[$data->offender_grade] ?? 'N/A') . ' - ' . ($sections[$data->offender_section] ?? 'N/A'),
-            'offender_parent_guardian' => $data->offender_parent_guardian,
-            'offender_parent_contact' => $data->offender_parent_contact,
-            'offender_class_adviser' => $data->offender_class_adviser,
-            'main_concern' => $data->main_concern,
-            'action_taken' => $data->action_taken,
-            'recommendation' => $data->recommendation,
-        ];
-
         $filename = 'report_info.pdf';
-        $layout = 'pdf_layout.pdf_report_info';
-
         try {
-           // return $report_info;
-            /*   $pdfGenerator = new PDFGeneratorController();
-            return $pdfGenerator->viewPDF($report_info, $layout, $filename); */
-            $data = $report_info;
-            $pdf = PDF::loadView($layout, $data);
+            $pdf = PDF::loadView('pdf_layout.pdf_report_info_v2', compact('concern'));
+            $pdf->setPaper([0, 0, 612.00, 1008.00], 'portrait');
             return $pdf->stream($filename);
+
+            return $pdf->download($filename);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json(['error' => 'Failed to generate PDF: ' . $e->getMessage()], 500);
         }
     }
     private function mailConcernUpdate($data, $email)

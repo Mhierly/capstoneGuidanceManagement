@@ -1,3 +1,10 @@
+body,
+html {
+
+    font-family: Arial, sans-serif;
+    background-color: #ffffff;
+}
+
 .report-content {
     font-family: 'Times New Roman', Times, serif;
     margin: auto;
@@ -168,42 +175,4 @@ tr {
 
 td {
     width: 50%;
-}
-
-.profile-container {
-    background-color: transparent;
-    border-radius: 15px;
-    padding: 40px;
-    margin: 20px auto;
-    max-width: 800px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-}
-
-.header {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.header h3,
-.header h4 {
-    margin: 5px 0;
-}
-
-img {
-    width: 100px;
-    height: auto;
-}
-
-@media print {
-    .profile-container {
-        box-shadow: none;
-        margin: 0;
-        padding: 0;
-        border-radius: 0;
-    }
-
-    .profile-table td input {
-        border: none;
-        border-bottom: 1px solid #000;
-    }
 }

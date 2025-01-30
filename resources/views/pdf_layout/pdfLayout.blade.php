@@ -18,7 +18,7 @@
                 <h4>Republic of the Philippines</h4>
                 <h4>Region III</h4>
                 <h4>Division of Nueva Ecija</h4>
-                <h3>Bongabon National High School</h3>
+                <h3 style="color: #6cbe1a">Bongabon National High School</h3>
                 <h4>Bongabon, Nueva Ecija</h4>
             </div>
             <br>

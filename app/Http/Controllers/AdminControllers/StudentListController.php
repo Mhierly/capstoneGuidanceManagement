@@ -156,11 +156,13 @@ class StudentListController extends Controller
         try {
             $student = Student::find($request->student);
             $studentImage = $student->studentProfile();
+            $modifiedUrl = str_replace("http://127.0.0.1:8000", "", $studentImage);
+            $studentImage =  public_path($modifiedUrl);
             $pdf = PDF::loadView('pdf_layout.studentInformation', compact('student', 'studentImage'));
             $pdf->setPaper([0, 0, 612.00, 1008.00], 'portrait');
             return $pdf->stream('student-information.pdf');
         } catch (\Throwable $th) {
-            //throw $th;
+            return $th->getMessage();
         }
     }
 }

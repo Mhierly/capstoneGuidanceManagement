@@ -94,7 +94,10 @@ class AdminController extends Controller
                 ];
             }
             //return $studentList;
-            return view('admin.studentListView', compact('studentList', 'student'));
+            $grade_levels = DB::table('grade_level')->get();
+            $advisers = DB::table('advisers')->get();
+
+            return view('admin.studentListView', compact('studentList', 'student', 'grade_levels', 'advisers'));
         } catch (\Throwable $th) {
             //throw $th;
         }

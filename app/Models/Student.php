@@ -73,7 +73,7 @@ class Student extends Model
     }
     function section()
     {
-        return DB::table('advisers')->where('id', $this->current_grade)->first();
+        return DB::table('sections')->where('id', $this->current_section)->first();
     }
     function yearLevel()
     {
@@ -82,6 +82,18 @@ class Student extends Model
     function concernList()
     {
         return $this->hasMany(Concerns::class, 'complainant_id')->orderBy('id', 'desc');
+    }
+    function barangay()
+    {
+        return DB::table('philippine_barangays')->where('barangay_code', $this->baranggay)->first();
+    }
+    function municipality()
+    {
+        return DB::table('philippine_cities')->where('city_municipality_code', $this->municipality)->first();
+    }
+    function province()
+    {
+        return DB::table('philippine_provinces')->where('province_code', $this->province)->first();
     }
 }
 

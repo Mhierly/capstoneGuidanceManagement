@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SARDO</title>
     <style>
-        body, html {
+        body,
+        html {
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
@@ -62,44 +64,52 @@
                 border-bottom: 1px solid #000;
             }
         }
+
         table {
             width: 100%;
             table-layout: fixed;
         }
-        td,th {
+
+        td,
+        th {
             width: 50%;
             padding: 10px;
             text-align: center;
         }
+
         input[type="text"] {
             width: 80%;
             box-sizing: border-box;
         }
-        .certificate-footer {
-        margin-top: 40px;
-        text-align: left;
-    }
-    .certificate-footer .signature {
-        display: inline-block;
-        margin-top: 20px;
-        text-align: center;
-    }
-    .certificate-footer .signature strong {
-        border-bottom: 2px solid black;
-    }
 
-    img {
-        width: 100px;
-        height: auto;
-    }
+        .certificate-footer {
+            margin-top: 40px;
+            text-align: left;
+        }
+
+        .certificate-footer .signature {
+            display: inline-block;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .certificate-footer .signature strong {
+            border-bottom: 2px solid black;
+        }
+
+        img {
+            width: 100px;
+            height: auto;
+        }
     </style>
 </head>
+
 <body>
     <div class="profile-container">
         <div class="header">
             <div class="deped">
-                <img src="{{ asset('img/logo.png') }}" style="float:left;">
-                <img src="{{ asset('img/deped.png') }}" style="float:right;">
+                <img src="{{ public_path('img/logo.png') }}" style="float:left;">
+                <img src="{{ public_path('img/deped.png') }}" style="float:right;">
                 <h5>Republic of the Philippines</h5>
                 <h5>Department of Education</h5>
             </div>
@@ -151,4 +161,5 @@
         </div>
     </div>
 </body>
+
 </html>

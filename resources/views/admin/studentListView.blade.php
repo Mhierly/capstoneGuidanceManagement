@@ -342,8 +342,12 @@
                 }
             });
         });
-        $(document).on('keydown', '.searchStudent', function() {
-
+        $(document).on('keyup', '.searchStudent', function() {
+            let search = $('.searchStudent').val()
+            $.get(`{{ route('fetch.studentSearch', ['student' => ${search}]) }}`, function(response) {
+                console.log(response)
+            })
+            console.log(search)
         });
     </script>
 @endsection

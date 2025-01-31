@@ -80,7 +80,7 @@
     <div class="home-container">
         <div class="heading">
             <div class="deped">
-                <img src="{{ asset('img/logo2.png') }}" alt="School Logo">
+                <img src="{{ public_path('img/logo2.png') }}" alt="School Logo">
                 <h4>Republic of the Philippines</h4>
                 <h3>Department of Education</h3>
             </div>

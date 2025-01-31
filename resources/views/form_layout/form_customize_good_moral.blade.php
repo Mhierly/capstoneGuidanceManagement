@@ -97,8 +97,8 @@
     <div class="gm-container">
         <div class="certificate-header">
             <div class="deped">
-                <img src="{{ asset('img/logo.png') }}" alt="School Logo" style="float:left;">
-                <img src="{{ asset('img/deped.png') }}" alt="Second Logo" style="float:right;">
+                <img src="{{ public_path('img/logo.png') }}" alt="School Logo" style="float:left;">
+                <img src="{{ public_path('img/deped.png') }}" alt="Second Logo" style="float:right;">
                 <h5>Republic of the Philippines</h5>
                 <h5>Department of Education</h5>
             </div>

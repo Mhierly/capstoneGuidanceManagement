@@ -940,4 +940,25 @@ class FetchController extends Controller
                 ->make(true);
         }
     }
+
+    function fetcSearchStudent(Request $request)
+    {
+        try {
+            $studentsList = Student::where('firstname', 'like', '%' . $request->search . '%')->get();
+            $studentList = [];
+            foreach ($studentsList as $value) {
+                $studentList[] = [
+                    'id' => $value->id,
+                    'name' => strtoupper($value->firstname . " " . $value->lastname),
+                    'image' => $value->studentProfile(),
+                    'email' => $value->account->email,
+                    'status' => $this->checkUserAvailability($value->id)
+                ];
+            }
+            return response(compact('studentList'), 200);
+            // return view('admin.studentListView', compact('studentList',));
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+    }
 }

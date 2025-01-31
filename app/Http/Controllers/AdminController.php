@@ -78,7 +78,7 @@ class AdminController extends Controller
     function viewStudentListV2(Request $request)
     {
         try {
-            $studentsList = Student::all();
+            $studentsList = Student::where('user_type', 2)->get();
             $student = [];
             $studentList = [];
             if ($request->student) {

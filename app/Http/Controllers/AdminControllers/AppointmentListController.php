@@ -182,7 +182,7 @@ class AppointmentListController extends Controller
             'appointment_time_to' => 'required'
         ]);
         try {
-          return  $appointmentData = Appointments::where('appointment_id', $request->appointmentID)->first();
+            $appointmentData = Appointments::where('appointment_id', $request->appointmentID)->first();
             if ($appointmentData) {
                 $appointmentData->where('appointment_id', $request->appointmentID)
                     ->update([

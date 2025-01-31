@@ -47,7 +47,9 @@
                 <tr>
                     <td>{{ $item->created_at->format('F d,Y h:m') }}</td>
                     <td>{{ strtoupper($item->offender_name) }}</td>
-                    <td>{{ $item->offender_grade . ' ' . $item->offender_section }}</td>
+                    <td>
+                        {{ (Auth::user()->yearLevel($item->offender_grade) ? Auth::user()->yearLevel($item->offender_grade)->grade_level : 'N/A' . ' ' . Auth::user()->section($item->offender_section)) ? Auth::user()->section($item->offender_section)->section_name : 'N/A' }}
+                    </td>
                     <td>{{ $item->main_concern }}</td>
                     <td>{{ $item->action_taken }}</td>
                 </tr>

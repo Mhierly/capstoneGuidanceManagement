@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -45,5 +46,13 @@ class User extends Authenticatable implements MustVerifyEmail
     function student()
     {
         return $this->hasOne(Student::class, 'user_id');
+    }
+    function section($data)
+    {
+        return DB::table('sections')->where('id', $data)->first();
+    }
+    function yearLevel($data)
+    {
+        return DB::table('grade_level')->where('id', $data)->first();
     }
 }

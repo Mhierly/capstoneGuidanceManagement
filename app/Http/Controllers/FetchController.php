@@ -18,12 +18,14 @@ use Illuminate\Support\Facades\Schema;
 
 class FetchController extends Controller
 {
-    protected function getStudentData($user_id){
+    protected function getStudentData($user_id)
+    {
         return $student = Student::where('user_id', $user_id)->first();
     }
 
     //fetch for users
-    public function fetchAppointmentRequest(Request $request){
+    public function fetchAppointmentRequest(Request $request)
+    {
         if ($request->ajax()) {
 
             $student = $this->getStudentData(Auth::user()->id);
@@ -33,26 +35,26 @@ class FetchController extends Controller
 
                 return DataTables::of($user_appointments)
                     ->addIndexColumn()
-                    ->addColumn('appointment_status', function($row){
+                    ->addColumn('appointment_status', function ($row) {
                         $status = DB::table('status')->where('id', $row->status)->value('status');
-                        if($row->status == 1){
-                            $appointment_status = $status.' '.
-                            '<div class="text-secondary" role="status">
+                        if ($row->status == 1) {
+                            $appointment_status = $status . ' ' .
+                                '<div class="text-secondary" role="status">
                                 <i class="bi bi-hourglass-bottom text-white"></i>
                             </div>';
-                        }else if($row->status == 2){
-                            $appointment_status = $status.' '.
-                            '<div class="bg-transparent text-danger" role="status">
+                        } else if ($row->status == 2) {
+                            $appointment_status = $status . ' ' .
+                                '<div class="bg-transparent text-danger" role="status">
                                 <i class="bi bi-x-circle-fill text-white"></i>
                             </div>';
-                        }else if($row->status == 3){
-                            $appointment_status = $status.' '.
-                            '<div class="bg-transparent text-success" role="status">
+                        } else if ($row->status == 3) {
+                            $appointment_status = $status . ' ' .
+                                '<div class="bg-transparent text-success" role="status">
                                 <i class="bi bi-check-circle-fill text-white"></i>
                             </div>';
-                        }else if($row->status == 4){
-                            $appointment_status = $status.' '.
-                            '<div class="bg-transparent text-primary" role="status">
+                        } else if ($row->status == 4) {
+                            $appointment_status = $status . ' ' .
+                                '<div class="bg-transparent text-primary" role="status">
                                 <i class="bi bi-check-circle-fill text-white">
                                 </i>
                             </div>';
@@ -60,7 +62,7 @@ class FetchController extends Controller
 
                         return $appointment_status;
                     })
-                    ->addColumn('formatted_appointment_date', function($row){
+                    ->addColumn('formatted_appointment_date', function ($row) {
                         // Your date string
                         $date = $row->appointment_date;
 
@@ -69,7 +71,7 @@ class FetchController extends Controller
 
                         return $formatted_appointment_date;
                     })
-                    ->addColumn('formatted_appointment_time', function($row){
+                    ->addColumn('formatted_appointment_time', function ($row) {
                         // Your date string
                         $date = $row->appointment_time;
 
@@ -78,7 +80,7 @@ class FetchController extends Controller
 
                         return $formatted_appointment_time;
                     })
-                    ->addColumn('formatted_appointment_time_from', function($row){
+                    ->addColumn('formatted_appointment_time_from', function ($row) {
                         // Your date string
                         $date = $row->appointment_time_from;
 
@@ -87,7 +89,7 @@ class FetchController extends Controller
 
                         return $formatted_appointment_time_from;
                     })
-                    ->addColumn('formatted_appointment_time_to', function($row){
+                    ->addColumn('formatted_appointment_time_to', function ($row) {
                         // Your date string
                         $date = $row->appointment_time_to;
 
@@ -96,22 +98,22 @@ class FetchController extends Controller
 
                         return $formatted_appointment_time_to;
                     })
-                    ->addColumn('duration', function($row){
+                    ->addColumn('duration', function ($row) {
 
-                        return $row->duration.' '.'minutes';
+                        return $row->duration . ' ' . 'minutes';
                     })
-                    ->addColumn('formatted_requested_date', function($row){
+                    ->addColumn('formatted_requested_date', function ($row) {
                         $date = $row->created_at;
 
                         $formatted_requested_date = Carbon::parse($date)->format('F j, Y g:i:s a');
 
                         return $formatted_requested_date;
                     })
-                    ->addColumn('cancel_btn', function($row){
-                        if($row->status == '1'){
-                            $cancel_btn = '<button data-id="'.$row->appointment_id.'" id="cancel_req_btn" class="btn btn-danger"><i class="bi bi-x-circle" style="color: white;"></i></button>';
-                        }else{
-                            $cancel_btn = '<button data-id="'.$row->appointment_id.'" id="cancel_req_btn" class="btn btn-danger" disabled><i class="bi bi-x-circle" style="color: white;"></i></button>';
+                    ->addColumn('cancel_btn', function ($row) {
+                        if ($row->status == '1') {
+                            $cancel_btn = '<button data-id="' . $row->appointment_id . '" id="cancel_req_btn" class="btn btn-danger"><i class="bi bi-x-circle" style="color: white;"></i></button>';
+                        } else {
+                            $cancel_btn = '<button data-id="' . $row->appointment_id . '" id="cancel_req_btn" class="btn btn-danger" disabled><i class="bi bi-x-circle" style="color: white;"></i></button>';
                         }
 
                         return $cancel_btn;
@@ -124,7 +126,8 @@ class FetchController extends Controller
         }
     }
 
-    public function fetchDropRequest(Request $request){
+    public function fetchDropRequest(Request $request)
+    {
         if ($request->ajax()) {
 
             $student = $this->getStudentData(Auth::user()->id);
@@ -134,27 +137,27 @@ class FetchController extends Controller
 
                 return DataTables::of($user_drops)
                     ->addIndexColumn()
-                    ->addColumn('appointment_status', function($row){
+                    ->addColumn('appointment_status', function ($row) {
                         $status = DB::table('status')->where('id', $row->status)->value('status');
-                        if($row->status == 1){
-                            $appointment_status = $status.' '.
-                            '<div class="text-secondary" role="status">
+                        if ($row->status == 1) {
+                            $appointment_status = $status . ' ' .
+                                '<div class="text-secondary" role="status">
                                 <i class="bi bi-hourglass-bottom text-white"></i>
                             </div>';
-                        }else if($row->status == 2){
-                            $appointment_status = $status.' '.
-                            '<div class="bg-transparent text-danger" role="status">
+                        } else if ($row->status == 2) {
+                            $appointment_status = $status . ' ' .
+                                '<div class="bg-transparent text-danger" role="status">
                                 <i class="bi bi-x-circle-fill text-white"></i>
                             </div>';
-                        }else if($row->status == 3){
-                            $appointment_status = $status.' '.
-                            '<div class="bg-transparent text-success" role="status">
+                        } else if ($row->status == 3) {
+                            $appointment_status = $status . ' ' .
+                                '<div class="bg-transparent text-success" role="status">
                                 <i class="bi bi-check-circle-fill text-white"></i>
                             </div>
                             ';
-                        }else if($row->status == 4){
-                            $appointment_status = $status.' '.
-                            '<div class="bg-transparent text-primary" role="status">
+                        } else if ($row->status == 4) {
+                            $appointment_status = $status . ' ' .
+                                '<div class="bg-transparent text-primary" role="status">
                                 <i class="bi bi-check-circle-fill text-white">
                                 </i>
                             </div>
@@ -163,38 +166,38 @@ class FetchController extends Controller
 
                         return $appointment_status;
                     })
-                    ->addColumn('formatted_request_date', function($row){
+                    ->addColumn('formatted_request_date', function ($row) {
                         $date = $row->request_date;
 
                         $formatted_requested_date = Carbon::parse($date)->format('F j, Y');
 
                         return $formatted_requested_date;
                     })
-                    ->addColumn('notes', function($row){
+                    ->addColumn('notes', function ($row) {
                         $note = $row->notes;
 
-                        if($row->status == 2){
+                        if ($row->status == 2) {
                             return '(Cancelled)';
                         }
 
-                        if($note == NULL){
+                        if ($note == NULL) {
                             return '(To be updated)';
                         }
 
                         return $note;
                     })
-                    ->addColumn('formatted_request_on', function($row){
+                    ->addColumn('formatted_request_on', function ($row) {
                         $date = $row->created_at;
 
                         $formatted_requested_on = Carbon::parse($date)->format('F j, Y g:i a');
 
                         return $formatted_requested_on;
                     })
-                    ->addColumn('cancel_btn', function($row){
-                        if($row->status == '1'){
-                            $cancel_btn = '<button data-id="'.$row->drop_request_id.'" id="cancel_req_btn" class="btn btn-danger"><i class="bi bi-x-circle" style="color: white;"></i></button>';
-                        }else{
-                            $cancel_btn = '<button data-id="'.$row->drop_request_id.'" id="cancel_req_btn" class="btn btn-danger" disabled><i class="bi bi-x-circle" style="color: white;"></i></button>';
+                    ->addColumn('cancel_btn', function ($row) {
+                        if ($row->status == '1') {
+                            $cancel_btn = '<button data-id="' . $row->drop_request_id . '" id="cancel_req_btn" class="btn btn-danger"><i class="bi bi-x-circle" style="color: white;"></i></button>';
+                        } else {
+                            $cancel_btn = '<button data-id="' . $row->drop_request_id . '" id="cancel_req_btn" class="btn btn-danger" disabled><i class="bi bi-x-circle" style="color: white;"></i></button>';
                         }
 
                         return $cancel_btn;
@@ -207,7 +210,8 @@ class FetchController extends Controller
         }
     }
 
-    public function fetchGoodMoralRequest(Request $request){
+    public function fetchGoodMoralRequest(Request $request)
+    {
         if ($request->ajax()) {
 
             $student = $this->getStudentData(Auth::user()->id);
@@ -217,28 +221,28 @@ class FetchController extends Controller
 
                 return DataTables::of($user_gm_request)
                     ->addIndexColumn()
-                    ->addColumn('appointment_status', function($row){
+                    ->addColumn('appointment_status', function ($row) {
                         $status = DB::table('status')->where('id', $row->status)->value('status');
-                        if($row->status == 1){
-                            $appointment_status = $status.' '.
-                            '<div class="text-secondary" role="status">
+                        if ($row->status == 1) {
+                            $appointment_status = $status . ' ' .
+                                '<div class="text-secondary" role="status">
                                 <i class="bi bi-hourglass-bottom text-white"></i>
                             </div>';
-                        }else if($row->status == 2){
-                            $appointment_status = $status.' '.
-                            '<div class="bg-transparent text-danger" role="status">
+                        } else if ($row->status == 2) {
+                            $appointment_status = $status . ' ' .
+                                '<div class="bg-transparent text-danger" role="status">
                                 <i class="bi bi-x-circle-fill text-white"></i>
                             </div>';
-                        }else if($row->status == 3){
-                            $appointment_status = $status.' '.
-                            '<div class="bg-transparent text-success" role="status">
+                        } else if ($row->status == 3) {
+                            $appointment_status = $status . ' ' .
+                                '<div class="bg-transparent text-success" role="status">
                                 <i class="bi bi-check-circle-fill text-white"></i>
                             </div>
                             <small class="text-primary">(Requested document already emailed by the counselor. <a style="text-decoration: underline;" href="https://mail.google.com/mail/u/0/#inbox" target="_blank">Check here</a>)</small>
                             ';
-                        }else if($row->status == 4){
-                            $appointment_status = $status.' '.
-                            '<div class="bg-transparent text-primary" role="status">
+                        } else if ($row->status == 4) {
+                            $appointment_status = $status . ' ' .
+                                '<div class="bg-transparent text-primary" role="status">
                                 <i class="bi bi-check-circle-fill text-white">
                                 </i>
                             </div>
@@ -248,38 +252,38 @@ class FetchController extends Controller
 
                         return $appointment_status;
                     })
-                    ->addColumn('formatted_request_date', function($row){
+                    ->addColumn('formatted_request_date', function ($row) {
                         $date = $row->request_date;
 
                         $formatted_requested_date = Carbon::parse($date)->format('F j, Y');
 
                         return $formatted_requested_date;
                     })
-                    ->addColumn('notes', function($row){
+                    ->addColumn('notes', function ($row) {
                         $note = $row->notes;
 
-                        if($row->status == 2){
+                        if ($row->status == 2) {
                             return '(Cancelled)';
                         }
 
-                        if($note == NULL){
+                        if ($note == NULL) {
                             return '(To be updated)';
                         }
 
                         return $note;
                     })
-                    ->addColumn('formatted_request_on', function($row){
+                    ->addColumn('formatted_request_on', function ($row) {
                         $date = $row->created_at;
 
                         $formatted_requested_date = Carbon::parse($date)->format('F j, Y g:i a');
 
                         return $formatted_requested_date;
                     })
-                    ->addColumn('cancel_btn', function($row){
-                        if($row->status == '1'){
-                            $cancel_btn = '<button data-id="'.$row->request_id.'" id="cancel_req_btn" class="btn btn-danger"><i class="bi bi-x-circle" style="color: white;"></i></button>';
-                        }else{
-                            $cancel_btn = '<button data-id="'.$row->request_id.'" id="cancel_req_btn" class="btn btn-danger" disabled><i class="bi bi-x-circle" style="color: white;"></i></button>';
+                    ->addColumn('cancel_btn', function ($row) {
+                        if ($row->status == '1') {
+                            $cancel_btn = '<button data-id="' . $row->request_id . '" id="cancel_req_btn" class="btn btn-danger"><i class="bi bi-x-circle" style="color: white;"></i></button>';
+                        } else {
+                            $cancel_btn = '<button data-id="' . $row->request_id . '" id="cancel_req_btn" class="btn btn-danger" disabled><i class="bi bi-x-circle" style="color: white;"></i></button>';
                         }
 
                         return $cancel_btn;
@@ -302,20 +306,32 @@ class FetchController extends Controller
 
         return response('No Image', 200)->header('Content-Type', 'text/plain');
     }
+    public function fetchImageV2($id)
+    {
+        $student = Student::find($id);
 
-    public function fetchSections($grade){
+        if ($student || !empty($student->student_img)) {
+            return $student->studentProfile();
+        }
+
+        return response('No Image', 200)->header('Content-Type', 'text/plain');
+    }
+    public function fetchSections($grade)
+    {
         $sections = DB::table('sections')->where('grade_id', $grade)->get();
 
         return response()->json($sections);
     }
 
-    public function fetchGradeLevel(){
+    public function fetchGradeLevel()
+    {
         $grade_levels = DB::table('grade_level')->get();
 
         return response()->json($grade_levels);
     }
 
-    public function fetchAdvisers(){
+    public function fetchAdvisers()
+    {
         $advisers = DB::table('advisers')->get();
 
         return response()->json($advisers);
@@ -330,7 +346,7 @@ class FetchController extends Controller
         $current_section = DB::table('sections')->where('id', $student->current_section)->value('section_name');
         $adviser = DB::table('advisers')->where('id', $student->adviser)->value('adviser_name');
         $birthday = Carbon::createFromFormat('Y-m-d', $student->birthday)->format('F j, Y');
-        $last_update =  Carbon::parse($student->updated_at)->format('F j, Y'). ' at ' .Carbon::parse($student->updated_at)->format('g:i a');
+        $last_update =  Carbon::parse($student->updated_at)->format('F j, Y') . ' at ' . Carbon::parse($student->updated_at)->format('g:i a');
         $birthDateCarbon = Carbon::createFromFormat('Y-m-d', $student->birthday);
 
         $currentDate = Carbon::now();
@@ -382,7 +398,8 @@ class FetchController extends Controller
     }
 
     //fetch for counselor
-    public function fetchStudentsAll(Request $request){
+    public function fetchStudentsAll(Request $request)
+    {
         if ($request->ajax()) {
 
             $students = DB::table('students')->get();
@@ -401,10 +418,10 @@ class FetchController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     $actionBtn = '
-                                <button class="btn" id="student_editor_btn" data-id="'.$row->id.'" data-bs-toggle="modal" data-bs-target="#student_editor_modal" style="background-color:  #ffc107;color:#fff;"><i class="bi bi-pencil-square" style="color: white;"></i></button>
-                                <button class="btn" data-id="'.$row->id.'" data-bs-toggle="modal" data-bs-target="#student_info_modal" style="background-color:  #20c997;color:#fff;"><i class="bi bi-eye" style="color: white;"></i></button>
-                                <button disabled id="email_student_btn" class="btn btn-secondary" data-id="'.$row->id.'"><i class="bi bi-send" style="color: white;"></i></button>
-                                <button id="download_info_btn" class="btn btn-secondary" data-id="'.$row->id.'"><i class="bi bi-file-earmark-arrow-down-fill" style="color: white;"></i></button>
+                                <button class="btn" id="student_editor_btn" data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#student_editor_modal" style="background-color:  #ffc107;color:#fff;"><i class="bi bi-pencil-square" style="color: white;"></i></button>
+                                <button class="btn" data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#student_info_modal" style="background-color:  #20c997;color:#fff;"><i class="bi bi-eye" style="color: white;"></i></button>
+                                <button disabled id="email_student_btn" class="btn btn-secondary" data-id="' . $row->id . '"><i class="bi bi-send" style="color: white;"></i></button>
+                                <button id="download_info_btn" class="btn btn-secondary" data-id="' . $row->id . '"><i class="bi bi-file-earmark-arrow-down-fill" style="color: white;"></i></button>
                                 ';
 
                     $student = Student::find($row->id);
@@ -415,16 +432,16 @@ class FetchController extends Controller
                             return is_null($value);
                         })) {
                             $actionBtn = '
-                            <button class="btn" id="student_editor_btn" data-id="'.$row->id.'" data-bs-toggle="modal" data-bs-target="#student_editor_modal" style="background-color:  #ffc107;color:#fff;"><i class="bi bi-pencil-square" style="color: white;"></i></button>
-                            <button class="btn" data-id="'.$row->id.'" data-bs-toggle="modal" data-bs-target="#student_info_modal" style="background-color:  #20c997;color:#fff;"><i class="bi bi-eye" style="color: white;"></i></button>
-                            <button id="email_student_btn" class="btn btn-secondary" data-id="'.$row->id.'"><i class="bi bi-send" style="color: white;"></i></button>
-                            <button disabled id="download_info_btn" class="btn btn-secondary" data-id="'.$row->id.'"><i class="bi bi-file-earmark-arrow-down-fill" style="color: white;"></i></button>
+                            <button class="btn" id="student_editor_btn" data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#student_editor_modal" style="background-color:  #ffc107;color:#fff;"><i class="bi bi-pencil-square" style="color: white;"></i></button>
+                            <button class="btn" data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#student_info_modal" style="background-color:  #20c997;color:#fff;"><i class="bi bi-eye" style="color: white;"></i></button>
+                            <button id="email_student_btn" class="btn btn-secondary" data-id="' . $row->id . '"><i class="bi bi-send" style="color: white;"></i></button>
+                            <button disabled id="download_info_btn" class="btn btn-secondary" data-id="' . $row->id . '"><i class="bi bi-file-earmark-arrow-down-fill" style="color: white;"></i></button>
                             ';
                         }
                     }
                     return $actionBtn;
                 })
-                ->addColumn('profile_status', function($row){
+                ->addColumn('profile_status', function ($row) {
                     $status = '<b class="text-white">Completed</b>';
                     $student = Student::find($row->id);
 
@@ -444,7 +461,8 @@ class FetchController extends Controller
         }
     }
 
-    public function fetchReports(Request $request){
+    public function fetchReports(Request $request)
+    {
         if ($request->ajax()) {
 
             $reports = Concerns::orderBy('created_at', 'desc');
@@ -454,7 +472,7 @@ class FetchController extends Controller
                 ->addColumn('action', function ($row) {
                     $list_of_status = DB::table('status')->get();
                     $downloadable = 'disabled';
-                    if($row->status == 3 || $row->status == 4){
+                    if ($row->status == 3 || $row->status == 4) {
                         $downloadable = '';
                     }
                     $actionBtn = '
@@ -472,20 +490,21 @@ class FetchController extends Controller
                         if (($row->status == 1 && $status->id == 4) ||
                             ($row->status == 2 && in_array($status->id, [1, 2, 3, 4])) ||
                             ($row->status == 3 && in_array($status->id, [1, 2])) ||
-                            ($row->status == 4 && in_array($status->id, [1, 2, 3, 4]))) {
+                            ($row->status == 4 && in_array($status->id, [1, 2, 3, 4]))
+                        ) {
                             $disabled = true;
                         }
 
                         if ($disabled) {
-                            $actionBtn .= '<li><a data-id="'.$status->id.'" class="dropdown-item" href="#"' . $disabledStyle . '>' . $status->status_pre . '</a></li>';
+                            $actionBtn .= '<li><a data-id="' . $status->id . '" class="dropdown-item" href="#"' . $disabledStyle . '>' . $status->status_pre . '</a></li>';
                         } else {
-                            if($status->id == 3){
-                                $actionBtn .= '<li><a data-bs-toggle="modal" data-bs-target="#concern_editor" data-concernid="'.$row->id.'" data-id="'.$status->id.'" data-name="'.$status->status.'" class="dropdown-item" href="#">' . $status->status_pre . '</a></li>';
-                            }else{
-                                if($row->status == $status->id){
-                                    $actionBtn .= '<li><a data-concernid="'.$row->id.'" data-id="'.$status->id.'" data-name="'.$status->status.'" class="dropdown-item" href="#" style="pointer-events: none; cursor: not-allowed;">' . $status->status_pre . '</a></li>';
-                                }else{
-                                    $actionBtn .= '<li><a id="update_status_btn" data-concernid="'.$row->id.'" data-id="'.$status->id.'" data-name="'.$status->status.'" class="dropdown-item" href="#">' . $status->status_pre . '</a></li>';
+                            if ($status->id == 3) {
+                                $actionBtn .= '<li><a data-bs-toggle="modal" data-bs-target="#concern_editor" data-concernid="' . $row->id . '" data-id="' . $status->id . '" data-name="' . $status->status . '" class="dropdown-item" href="#">' . $status->status_pre . '</a></li>';
+                            } else {
+                                if ($row->status == $status->id) {
+                                    $actionBtn .= '<li><a data-concernid="' . $row->id . '" data-id="' . $status->id . '" data-name="' . $status->status . '" class="dropdown-item" href="#" style="pointer-events: none; cursor: not-allowed;">' . $status->status_pre . '</a></li>';
+                                } else {
+                                    $actionBtn .= '<li><a id="update_status_btn" data-concernid="' . $row->id . '" data-id="' . $status->id . '" data-name="' . $status->status . '" class="dropdown-item" href="#">' . $status->status_pre . '</a></li>';
                                 }
                             }
                         }
@@ -494,33 +513,33 @@ class FetchController extends Controller
                     $actionBtn .= '
                                 </ul>
                             </div>
-                            <button class="btn" data-id="'.$row->id.'" data-bs-toggle="modal" data-bs-target="#student_concern_modal" style="background-color:  #20c997;color:#fff;"><i class="bi bi-eye" style="color: white;"></i></button>
-                            <button id="download_report_info" class="btn btn-secondary bg-white text-black" data-id="'.$row->id.'" '.$downloadable.'><i class="bi bi-file-earmark-arrow-down-fill" style="color: black;"></i></button>
-                            <button id="delete_report_btn" data-id="'.$row->id.'" class="btn btn-danger"><i class="bi bi-trash" style="color: white;"></i></button>
+                            <button class="btn" data-id="' . $row->id . '" data-bs-toggle="modal" data-bs-target="#student_concern_modal" style="background-color:  #20c997;color:#fff;"><i class="bi bi-eye" style="color: white;"></i></button>
+                            <button id="download_report_info" class="btn btn-secondary bg-white text-black" data-id="' . $row->id . '" ' . $downloadable . '><i class="bi bi-file-earmark-arrow-down-fill" style="color: black;"></i></button>
+                            <button id="delete_report_btn" data-id="' . $row->id . '" class="btn btn-danger"><i class="bi bi-trash" style="color: white;"></i></button>
                         </div>';
                     return $actionBtn;
                 })
-                ->addColumn('report_status', function($row){
+                ->addColumn('report_status', function ($row) {
                     $status = DB::table('status')->where('id', $row->status)->value('status');
-                    if($row->status == 1){
-                        $report_status = $status.' '.
-                        '<div class="text-secondary" role="status">
+                    if ($row->status == 1) {
+                        $report_status = $status . ' ' .
+                            '<div class="text-secondary" role="status">
                             <i class="bi bi-hourglass-bottom text-white"></i>
                         </div>';
-                    }else if($row->status == 2){
-                        $report_status = $status.' '.
-                        '<div class="bg-transparent text-danger" role="status">
+                    } else if ($row->status == 2) {
+                        $report_status = $status . ' ' .
+                            '<div class="bg-transparent text-danger" role="status">
                             <i class="bi bi-x-circle-fill text-white"></i>
                         </div>';
-                    }else if($row->status == 3){
-                        $report_status = $status.' '.
-                        '<div class="bg-transparent text-success" role="status">
+                    } else if ($row->status == 3) {
+                        $report_status = $status . ' ' .
+                            '<div class="bg-transparent text-success" role="status">
                             <i class="bi bi-check-circle-fill text-white"></i>
                         </div>
                         ';
-                    }else if($row->status == 4){
-                        $report_status = $status.' '.
-                        '<div class="bg-transparent text-primary" role="status">
+                    } else if ($row->status == 4) {
+                        $report_status = $status . ' ' .
+                            '<div class="bg-transparent text-primary" role="status">
                             <i class="bi bi-check-circle-fill text-white">
                             </i>
                         </div>
@@ -529,7 +548,7 @@ class FetchController extends Controller
 
                     return $report_status;
                 })
-                ->addColumn('formatted_requested_date', function($row){
+                ->addColumn('formatted_requested_date', function ($row) {
                     $date = $row->created_at;
 
                     $formatted_requested_date = Carbon::parse($date)->format('F j, Y g:i a');
@@ -541,7 +560,8 @@ class FetchController extends Controller
         }
     }
 
-    public function fetchDropRequest2(Request $request){
+    public function fetchDropRequest2(Request $request)
+    {
         if ($request->ajax()) {
 
             $drop_requests = Drops::where('isActive', 1)->orderBy('request_date', 'desc')->get();
@@ -551,7 +571,7 @@ class FetchController extends Controller
                 ->addColumn('action', function ($row) {
                     $list_of_status = DB::table('status')->get();
                     $downloadable = 'disabled';
-                    if($row->status == 3 || $row->status == 4){
+                    if ($row->status == 3 || $row->status == 4) {
                         $downloadable = '';
                     }
                     $actionBtn = '
@@ -569,20 +589,21 @@ class FetchController extends Controller
                         if (($row->status == 1 && $status->id == 4) ||
                             ($row->status == 2 && in_array($status->id, [1, 2, 3, 4])) ||
                             ($row->status == 3 && in_array($status->id, [1, 2])) ||
-                            ($row->status == 4 && in_array($status->id, [1, 2, 3, 4]))) {
+                            ($row->status == 4 && in_array($status->id, [1, 2, 3, 4]))
+                        ) {
                             $disabled = true;
                         }
 
                         if ($disabled) {
-                            $actionBtn .= '<li><a data-id="'.$status->id.'" class="dropdown-item" href="#"' . $disabledStyle . '>' . $status->status_pre . '</a></li>';
+                            $actionBtn .= '<li><a data-id="' . $status->id . '" class="dropdown-item" href="#"' . $disabledStyle . '>' . $status->status_pre . '</a></li>';
                         } else {
-                            if($status->id == 3){
-                                $actionBtn .= '<li><a id="approve_status_btn" data-drop="'.$row->drop_request_id.'" data-notes="'.$row->notes.'" data-id="'.$status->id.'" class="dropdown-item" href="#">' . $status->status_pre . '</a></li>';
-                            }else{
-                                if($row->status == $status->id){
-                                    $actionBtn .= '<li><a data-drop="'.$row->drop_request_id.'" data-id="'.$status->id.'" data-name="'.$status->status.'" class="dropdown-item" href="#" style="pointer-events: none; cursor: not-allowed;">' . $status->status_pre . '</a></li>';
-                                }else{
-                                    $actionBtn .= '<li><a id="update_status_btn" data-drop="'.$row->drop_request_id.'" data-id="'.$status->id.'" data-name="'.$status->status.'" class="dropdown-item" href="#">' . $status->status_pre . '</a></li>';
+                            if ($status->id == 3) {
+                                $actionBtn .= '<li><a id="approve_status_btn" data-drop="' . $row->drop_request_id . '" data-notes="' . $row->notes . '" data-id="' . $status->id . '" class="dropdown-item" href="#">' . $status->status_pre . '</a></li>';
+                            } else {
+                                if ($row->status == $status->id) {
+                                    $actionBtn .= '<li><a data-drop="' . $row->drop_request_id . '" data-id="' . $status->id . '" data-name="' . $status->status . '" class="dropdown-item" href="#" style="pointer-events: none; cursor: not-allowed;">' . $status->status_pre . '</a></li>';
+                                } else {
+                                    $actionBtn .= '<li><a id="update_status_btn" data-drop="' . $row->drop_request_id . '" data-id="' . $status->id . '" data-name="' . $status->status . '" class="dropdown-item" href="#">' . $status->status_pre . '</a></li>';
                                 }
                             }
                         }
@@ -591,34 +612,34 @@ class FetchController extends Controller
                     $actionBtn .= '
                                 </ul>
                             </div>
-                            <button class="btn btn-primary" data-id="'.$row->student_id.'" data-bs-toggle="modal" data-bs-target="#student_info_modal" style="color:#fff;"><i class="bi bi-person-fill" style="color: white;"></i></button>
-                            <button id="download_drop_form" class="btn btn-secondary bg-white text-white" data-id="'.$row->drop_request_id.'" disabled><i class="bi bi-file-earmark-arrow-down-fill" style="color: black;"></i></button>
-                            <button id="archive_drop_item" data-id="'.$row->drop_request_id.'" class="btn btn-danger"><i class="bi bi-archive" style="color: white;"></i></button>
+                            <button class="btn btn-primary" data-id="' . $row->student_id . '" data-bs-toggle="modal" data-bs-target="#student_info_modal" style="color:#fff;"><i class="bi bi-person-fill" style="color: white;"></i></button>
+                            <button id="download_drop_form" class="btn btn-secondary bg-white text-white" data-id="' . $row->drop_request_id . '" disabled><i class="bi bi-file-earmark-arrow-down-fill" style="color: black;"></i></button>
+                            <button id="archive_drop_item" data-id="' . $row->drop_request_id . '" class="btn btn-danger"><i class="bi bi-archive" style="color: white;"></i></button>
                         </div>';
                     return $actionBtn;
                 })
-                ->addColumn('drop_status', function($row){
+                ->addColumn('drop_status', function ($row) {
                     $status = DB::table('status')->where('id', $row->status)->value('status');
-                    
-                    if($row->status == 1){
-                        $drop_status = $status.' '.
-                        '<div class="text-secondary" role="status">
+
+                    if ($row->status == 1) {
+                        $drop_status = $status . ' ' .
+                            '<div class="text-secondary" role="status">
                             <i class="bi bi-hourglass-bottom text-white"></i>
                         </div>';
-                    }else if($row->status == 2){
-                        $drop_status = $status.' '.
-                        '<div class="bg-transparent text-danger" role="status">
+                    } else if ($row->status == 2) {
+                        $drop_status = $status . ' ' .
+                            '<div class="bg-transparent text-danger" role="status">
                             <i class="bi bi-x-circle-fill text-white"></i>
                         </div>';
-                    }else if($row->status == 3){
-                        $drop_status = $status.' '.
-                        '<div class="bg-transparent text-success" role="status">
+                    } else if ($row->status == 3) {
+                        $drop_status = $status . ' ' .
+                            '<div class="bg-transparent text-success" role="status">
                             <i class="bi bi-check-circle-fill text-white"></i>
                         </div>
                         ';
-                    }else if($row->status == 4){
-                        $drop_status = $status.' '.
-                        '<div class="bg-transparent text-primary" role="status">
+                    } else if ($row->status == 4) {
+                        $drop_status = $status . ' ' .
+                            '<div class="bg-transparent text-primary" role="status">
                             <i class="bi bi-check-circle-fill text-white">
                             </i>
                         </div>
@@ -627,24 +648,25 @@ class FetchController extends Controller
 
                     return $drop_status;
                 })
-                ->addColumn('formatted_requested_date', function($row){
+                ->addColumn('formatted_requested_date', function ($row) {
                     $date = $row->request_date;
 
                     $formatted_requested_date = Carbon::parse($date)->format('F j, Y');
 
                     return $formatted_requested_date;
                 })
-                ->addColumn('student_name', function($row){
+                ->addColumn('student_name', function ($row) {
                     $student = DB::table('students')->where('id', $row->student_id)->first();
 
-                    return ucwords($student->firstname.' '.$student->middlename.' '.$student->lastname.' '.$student->suffix);
+                    return ucwords($student->firstname . ' ' . $student->middlename . ' ' . $student->lastname . ' ' . $student->suffix);
                 })
                 ->rawColumns(['action', 'drop_status'])
                 ->make(true);
         }
     }
 
-    public function fetchGoodMoralRequest2(Request $request){
+    public function fetchGoodMoralRequest2(Request $request)
+    {
         if ($request->ajax()) {
 
             $good_morals = GoodMorals::where('isActive', 1)->orderBy('request_date', 'desc')->get();
@@ -654,7 +676,7 @@ class FetchController extends Controller
                 ->addColumn('action', function ($row) {
                     $list_of_status = DB::table('status')->get();
                     $downloadable = 'disabled';
-                    if($row->status == 3 || $row->status == 4){
+                    if ($row->status == 3 || $row->status == 4) {
                         $downloadable = '';
                     }
                     $actionBtn = '
@@ -672,20 +694,21 @@ class FetchController extends Controller
                         if (($row->status == 1 && $status->id == 4) ||
                             ($row->status == 2 && in_array($status->id, [1, 2, 3, 4])) ||
                             ($row->status == 3 && in_array($status->id, [1, 2])) ||
-                            ($row->status == 4 && in_array($status->id, [1, 2, 3, 4]))) {
+                            ($row->status == 4 && in_array($status->id, [1, 2, 3, 4]))
+                        ) {
                             $disabled = true;
                         }
 
                         if ($disabled) {
-                            $actionBtn .= '<li><a data-id="'.$status->id.'" class="dropdown-item" href="#"' . $disabledStyle . '>' . $status->status_pre . '</a></li>';
+                            $actionBtn .= '<li><a data-id="' . $status->id . '" class="dropdown-item" href="#"' . $disabledStyle . '>' . $status->status_pre . '</a></li>';
                         } else {
-                            if($status->id == 3){
-                                $actionBtn .= '<li><a id="approve_status_btn" data-gm="'.$row->request_id.'" data-notes="'.$row->notes.'" data-id="'.$status->id.'" class="dropdown-item" href="#">' . $status->status_pre . '</a></li>';
-                            }else{
-                                if($row->status == $status->id){
-                                    $actionBtn .= '<li><a data-gm="'.$row->request_id.'" data-id="'.$status->id.'" data-name="'.$status->status.'" class="dropdown-item" href="#" style="pointer-events: none; cursor: not-allowed;">' . $status->status_pre . '</a></li>';
-                                }else{
-                                    $actionBtn .= '<li><a id="update_status_btn" data-gm="'.$row->request_id.'" data-id="'.$status->id.'" data-name="'.$status->status.'" class="dropdown-item" href="#">' . $status->status_pre . '</a></li>';
+                            if ($status->id == 3) {
+                                $actionBtn .= '<li><a id="approve_status_btn" data-gm="' . $row->request_id . '" data-notes="' . $row->notes . '" data-id="' . $status->id . '" class="dropdown-item" href="#">' . $status->status_pre . '</a></li>';
+                            } else {
+                                if ($row->status == $status->id) {
+                                    $actionBtn .= '<li><a data-gm="' . $row->request_id . '" data-id="' . $status->id . '" data-name="' . $status->status . '" class="dropdown-item" href="#" style="pointer-events: none; cursor: not-allowed;">' . $status->status_pre . '</a></li>';
+                                } else {
+                                    $actionBtn .= '<li><a id="update_status_btn" data-gm="' . $row->request_id . '" data-id="' . $status->id . '" data-name="' . $status->status . '" class="dropdown-item" href="#">' . $status->status_pre . '</a></li>';
                                 }
                             }
                         }
@@ -694,33 +717,33 @@ class FetchController extends Controller
                     $actionBtn .= '
                                 </ul>
                             </div>
-                            <button class="btn btn-primary" data-id="'.$row->student_id.'" data-bs-toggle="modal" data-bs-target="#student_info_modal" style="color:#fff;"><i class="bi bi-person-fill" style="color: white;"></i></button>
-                            <button id="download_gm_form" class="btn btn-secondary bg-white text-white" data-id="'.$row->request_id.'" '.$downloadable.'><i class="bi bi-file-earmark-arrow-down-fill" style="color: black;"></i></button>
-                            <button id="archive_gm_item" data-id="'.$row->request_id.'" class="btn btn-danger"><i class="bi bi-archive" style="color: white;"></i></button>
+                            <button class="btn btn-primary" data-id="' . $row->student_id . '" data-bs-toggle="modal" data-bs-target="#student_info_modal" style="color:#fff;"><i class="bi bi-person-fill" style="color: white;"></i></button>
+                            <button id="download_gm_form" class="btn btn-secondary bg-white text-white" data-id="' . $row->request_id . '" ' . $downloadable . '><i class="bi bi-file-earmark-arrow-down-fill" style="color: black;"></i></button>
+                            <button id="archive_gm_item" data-id="' . $row->request_id . '" class="btn btn-danger"><i class="bi bi-archive" style="color: white;"></i></button>
                         </div>';
                     return $actionBtn;
                 })
-                ->addColumn('gm_status', function($row){
+                ->addColumn('gm_status', function ($row) {
                     $status = DB::table('status')->where('id', $row->status)->value('status');
-                    if($row->status == 1){
-                        $gm_status = $status.' '.
-                        '<div class="text-secondary" role="status">
+                    if ($row->status == 1) {
+                        $gm_status = $status . ' ' .
+                            '<div class="text-secondary" role="status">
                             <i class="bi bi-hourglass-bottom text-white"></i>
                         </div>';
-                    }else if($row->status == 2){
-                        $gm_status = $status.' '.
-                        '<div class="bg-transparent text-danger" role="status">
+                    } else if ($row->status == 2) {
+                        $gm_status = $status . ' ' .
+                            '<div class="bg-transparent text-danger" role="status">
                             <i class="bi bi-x-circle-fill text-white"></i>
                         </div>';
-                    }else if($row->status == 3){
-                        $gm_status = $status.' '.
-                        '<div class="bg-transparent text-success" role="status">
+                    } else if ($row->status == 3) {
+                        $gm_status = $status . ' ' .
+                            '<div class="bg-transparent text-success" role="status">
                             <i class="bi bi-check-circle-fill text-white"></i>
                         </div>
                         ';
-                    }else if($row->status == 4){
-                        $gm_status = $status.' '.
-                        '<div class="bg-transparent text-primary" role="status">
+                    } else if ($row->status == 4) {
+                        $gm_status = $status . ' ' .
+                            '<div class="bg-transparent text-primary" role="status">
                             <i class="bi bi-check-circle-fill text-white">
                             </i>
                         </div>
@@ -729,24 +752,25 @@ class FetchController extends Controller
 
                     return $gm_status;
                 })
-                ->addColumn('formatted_requested_date', function($row){
+                ->addColumn('formatted_requested_date', function ($row) {
                     $date = $row->request_date;
 
                     $formatted_requested_date = Carbon::parse($date)->format('F j, Y');
 
                     return $formatted_requested_date;
                 })
-                ->addColumn('student_name', function($row){
+                ->addColumn('student_name', function ($row) {
                     $student = DB::table('students')->where('id', $row->student_id)->first();
 
-                    return ucwords($student->firstname.' '.$student->middlename.' '.$student->lastname.' '.$student->suffix);
+                    return ucwords($student->firstname . ' ' . $student->middlename . ' ' . $student->lastname . ' ' . $student->suffix);
                 })
                 ->rawColumns(['action', 'gm_status'])
                 ->make(true);
         }
     }
 
-    public function fetchAppointmentRequest2(Request $request){
+    public function fetchAppointmentRequest2(Request $request)
+    {
         if ($request->ajax()) {
 
             $requests = Appointments::orderBy('created_at', 'desc')->get();
@@ -756,7 +780,7 @@ class FetchController extends Controller
                 ->addColumn('action', function ($row) {
                     $list_of_status = DB::table('status')->get();
                     $email_available = 'disabled';
-                    if($row->status == 3){
+                    if ($row->status == 3) {
                         $email_available = '';
                     }
                     $actionBtn = '
@@ -774,17 +798,18 @@ class FetchController extends Controller
                         if (($row->status == 1 && $status->id == 4) ||
                             ($row->status == 2 && in_array($status->id, [1, 2, 3, 4])) ||
                             ($row->status == 3 && in_array($status->id, [1, 2])) ||
-                            ($row->status == 4 && in_array($status->id, [1, 2, 3, 4]))) {
+                            ($row->status == 4 && in_array($status->id, [1, 2, 3, 4]))
+                        ) {
                             $disabled = true;
                         }
 
                         if ($disabled) {
-                            $actionBtn .= '<li><a data-id="'.$status->id.'" class="dropdown-item" href="#"' . $disabledStyle . '>' . $status->status_pre . '</a></li>';
+                            $actionBtn .= '<li><a data-id="' . $status->id . '" class="dropdown-item" href="#"' . $disabledStyle . '>' . $status->status_pre . '</a></li>';
                         } else {
-                            if($row->status == $status->id){
-                                $actionBtn .= '<li><a data-appointment="'.$row->appointment_id.'" data-id="'.$status->id.'" data-name="'.$status->status.'" class="dropdown-item" href="#" style="pointer-events: none; cursor: not-allowed;">' . $status->status_pre . '</a></li>';
-                            }else{
-                                $actionBtn .= '<li><a id="update_status_btn" data-appointment="'.$row->appointment_id.'" data-id="'.$status->id.'" data-name="'.$status->status.'" class="dropdown-item" href="#">' . $status->status_pre . '</a></li>';
+                            if ($row->status == $status->id) {
+                                $actionBtn .= '<li><a data-appointment="' . $row->appointment_id . '" data-id="' . $status->id . '" data-name="' . $status->status . '" class="dropdown-item" href="#" style="pointer-events: none; cursor: not-allowed;">' . $status->status_pre . '</a></li>';
+                            } else {
+                                $actionBtn .= '<li><a id="update_status_btn" data-appointment="' . $row->appointment_id . '" data-id="' . $status->id . '" data-name="' . $status->status . '" class="dropdown-item" href="#">' . $status->status_pre . '</a></li>';
                             }
                         }
                     }
@@ -792,32 +817,32 @@ class FetchController extends Controller
                     $actionBtn .= '
                                 </ul>
                             </div>
-                            <button class="btn btn-primary" data-id="'.$row->student_id.'" data-bs-toggle="modal" data-bs-target="#student_info_modal" style="color:#fff;"><i class="bi bi-person-fill" style="color: white;"></i></button>
-                            <button id="email_appointment" class="btn btn-secondary bg-white text-white" data-student="'.$row->student_id.'" data-id="'.$row->appointment_id.'" '.$email_available.'><i class="bi bi-send" style="color: black;"></i></button>
-                            <button id="delete_appointment_item" data-id="'.$row->appointment_id.'" class="btn btn-danger"><i class="bi bi-trash" style="color: white;"></i></button>
+                            <button class="btn btn-primary" data-id="' . $row->student_id . '" data-bs-toggle="modal" data-bs-target="#student_info_modal" style="color:#fff;"><i class="bi bi-person-fill" style="color: white;"></i></button>
+                            <button id="email_appointment" class="btn btn-secondary bg-white text-white" data-student="' . $row->student_id . '" data-id="' . $row->appointment_id . '" ' . $email_available . '><i class="bi bi-send" style="color: black;"></i></button>
+                            <button id="delete_appointment_item" data-id="' . $row->appointment_id . '" class="btn btn-danger"><i class="bi bi-trash" style="color: white;"></i></button>
                         </div>';
                     return $actionBtn;
                 })
-                ->addColumn('appointment_status', function($row){
+                ->addColumn('appointment_status', function ($row) {
                     $status = DB::table('status')->where('id', $row->status)->value('status');
-                    if($row->status == 1){
-                        $appointment_status = $status.' '.
-                        '<div class="text-secondary" role="status">
+                    if ($row->status == 1) {
+                        $appointment_status = $status . ' ' .
+                            '<div class="text-secondary" role="status">
                             <i class="bi bi-hourglass-bottom text-white"></i>
                         </div>';
-                    }else if($row->status == 2){
-                        $appointment_status = $status.' '.
-                        '<div class="bg-transparent text-danger" role="status">
+                    } else if ($row->status == 2) {
+                        $appointment_status = $status . ' ' .
+                            '<div class="bg-transparent text-danger" role="status">
                             <i class="bi bi-x-circle-fill text-white"></i>
                         </div>';
-                    }else if($row->status == 3){
-                        $appointment_status = $status.' '.
-                        '<div class="bg-transparent text-success" role="status">
+                    } else if ($row->status == 3) {
+                        $appointment_status = $status . ' ' .
+                            '<div class="bg-transparent text-success" role="status">
                             <i class="bi bi-check-circle-fill text-white"></i>
                         </div>';
-                    }else if($row->status == 4){
-                        $appointment_status = $status.' '.
-                        '<div class="bg-transparent text-primary" role="status">
+                    } else if ($row->status == 4) {
+                        $appointment_status = $status . ' ' .
+                            '<div class="bg-transparent text-primary" role="status">
                             <i class="bi bi-check-circle-fill text-white">
                             </i>
                         </div>';
@@ -825,7 +850,7 @@ class FetchController extends Controller
 
                     return $appointment_status;
                 })
-                ->addColumn('formatted_appointment_date', function($row){
+                ->addColumn('formatted_appointment_date', function ($row) {
                     $date = Carbon::parse($row->appointment_date)->format('F j, Y');
                     $time = Carbon::parse($row->appointment_time)->format('g:i a');
                     $from = Carbon::parse($row->appointment_time_from)->format('g:i a');
@@ -841,36 +866,37 @@ class FetchController extends Controller
 
                     return $formatted_appointment_date;
                 })
-                ->addColumn('formatted_requested_date', function($row){
+                ->addColumn('formatted_requested_date', function ($row) {
                     $date = $row->created_at;
 
                     $formatted_requested_date = Carbon::parse($date)->format('F j, Y g:i a');
 
                     return $formatted_requested_date;
                 })
-                ->addColumn('student_name', function($row){
+                ->addColumn('student_name', function ($row) {
                     $student = DB::table('students')->where('id', $row->student_id)->first();
 
-                    return ucwords($student->firstname.' '.$student->middlename.' '.$student->lastname.' '.$student->suffix);
+                    return ucwords($student->firstname . ' ' . $student->middlename . ' ' . $student->lastname . ' ' . $student->suffix);
                 })
                 ->rawColumns(['action', 'appointment_status', 'formatted_appointment_date'])
                 ->make(true);
         }
     }
 
-    public function fetchSardoRecords(Request $request){
+    public function fetchSardoRecords(Request $request)
+    {
         if ($request->ajax()) {
 
             $sardo = DB::table('grade_level')->get();
 
             return DataTables::of($sardo)
                 ->addIndexColumn()
-                ->addColumn('sardo', function ($row){
+                ->addColumn('sardo', function ($row) {
                     $no_of_sardo = Drops::leftJoin('students', 'drop_request.student_id', '=', 'students.id')
-                                        ->leftJoin('grade_level', 'students.current_grade', '=', 'grade_level.id')
-                                        ->where('grade_level.id', $row->id)
-                                        ->where('drop_request.status', '=', '1')
-                                        ->count();
+                        ->leftJoin('grade_level', 'students.current_grade', '=', 'grade_level.id')
+                        ->where('grade_level.id', $row->id)
+                        ->where('drop_request.status', '=', '1')
+                        ->count();
                     return $no_of_sardo;
                 })
                 ->rawColumns(['sardo'])
@@ -878,16 +904,17 @@ class FetchController extends Controller
         }
     }
 
-    public function fetchModules(Request $request){
+    public function fetchModules(Request $request)
+    {
         if ($request->ajax()) {
 
             $modules = DB::table('career_guidance_module')->get();
 
             return DataTables::of($modules)
                 ->addIndexColumn()
-                ->addColumn('action', function ($row){
-                    $btn = '<button id="view_btn" data-pdf="'.$row->file.'" data-bs-toggle="modal" data-bs-target="#viewPDF" class="btn btn-warning"><i class="bi bi-eye-fill" style="color: white;"></i></button>
-                            <button id="delete_btn" data-id="'.$row->id.'" class="btn btn-danger"><i class="bi bi-trash" style="color: white;"></i></button>
+                ->addColumn('action', function ($row) {
+                    $btn = '<button id="view_btn" data-pdf="' . $row->file . '" data-bs-toggle="modal" data-bs-target="#viewPDF" class="btn btn-warning"><i class="bi bi-eye-fill" style="color: white;"></i></button>
+                            <button id="delete_btn" data-id="' . $row->id . '" class="btn btn-danger"><i class="bi bi-trash" style="color: white;"></i></button>
                             ';
 
                     return $btn;
@@ -897,15 +924,16 @@ class FetchController extends Controller
         }
     }
 
-    public function fetchCounselorList(Request $request){
+    public function fetchCounselorList(Request $request)
+    {
         if ($request->ajax()) {
 
             $counselors = DB::table('counselor')->get();
 
             return DataTables::of($counselors)
                 ->addIndexColumn()
-                ->addColumn('full_name', function ($row){
-                    $full_name = $row->firstname. ' ' . $row->surname;
+                ->addColumn('full_name', function ($row) {
+                    $full_name = $row->firstname . ' ' . $row->surname;
                     return ucwords($full_name);
                 })
                 ->rawColumns(['full_name'])

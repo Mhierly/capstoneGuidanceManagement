@@ -40,7 +40,7 @@ Route::get('/', [HomeController::class, 'redirectPage']);
 
 //fetch image
 Route::get('/student/image/{id}', [FetchController::class, 'fetchImage'])->name('student.image');
-
+Route::get('/student/image/v2/{id}', [FetchController::class, 'fetchImageV2'])->name('student.image.v2');
 //fetch student information
 Route::get('/student/info/{id}', [FetchController::class, 'fetchStudentInformation'])->name('student.information');
 

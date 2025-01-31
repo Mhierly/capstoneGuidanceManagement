@@ -182,7 +182,7 @@ class AppointmentListController extends Controller
             'appointment_time_to' => 'required'
         ]);
         try {
-            $appointmentData = Appointments::where('appointment_id', $request->appointmentID)->first();
+          return  $appointmentData = Appointments::where('appointment_id', $request->appointmentID)->first();
             if ($appointmentData) {
                 $appointmentData->where('appointment_id', $request->appointmentID)
                     ->update([
@@ -196,7 +196,7 @@ class AppointmentListController extends Controller
                 return back()->with(['error' => 'Missing Id']);
             }
         } catch (\Throwable $th) {
-            //return back()->with(['error' => $th->getMessage()]);
+            return back()->with(['error' => $th->getMessage()]);
             return $th->getMessage();
         }
     }

@@ -156,6 +156,7 @@ Route::middleware(['auth', 'userAuth:1', 'preventBackHistory'])->group(function 
     Route::post('/admin/Teacher/add', [AdminController::class, 'addTeacher'])->name('admin.teacher.add');
     //Search Item
     Route::get('fetch-search-student', [FetchController::class, 'fetcSearchStudent'])->name('fetch.studentSearch');
+    Route::get('fetch-concern-report', [FetchController::class, 'fetchConcerReportStudent']);
 });
 
 //STUDENTS

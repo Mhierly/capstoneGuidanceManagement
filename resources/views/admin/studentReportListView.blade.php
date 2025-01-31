@@ -106,7 +106,7 @@
                 @endif
 
             </div>
-            <div class="col-md-4">
+            <div class="col-lg-4 col-md-12">
                 <small class="fw-bolder text-primary">LIST OF STUDENT CONCERN</small>
                 <div class="card">
                     <div class="card-body">
@@ -119,7 +119,8 @@
                             <option value="4">COMPLETED</option>
                         </select>
 
-                        <a href="{{ route('admin.concernList') }}" target="_blank" class="btn btn-primary w-100 mt-2">GENERATE REPORT</a>
+                        <a href="{{ route('admin.concernList') }}" target="_blank"
+                            class="btn btn-primary w-100 mt-2">GENERATE REPORT</a>
                     </div>
                 </div>
                 <div class="appointment-list mt-3">
@@ -185,4 +186,84 @@
         </div>
     </div>
     @include('layouts.loading');
+    <script>
+        $(document).ready(function() {
+            @if (session('error'))
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: '{{ session('error') }}'
+                });
+            @elseif (session('success'))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Request sent!',
+                    text: '{{ session('success') }}'
+                });
+            @endif
+        })
+        $(document).on('change', '.select-status', function() {
+            let data = $('.select-status').val()
+            $('.appointment-list').empty();
+            $.get('/fetch-concern-report?status=' + data, function(response) {
+                console.log(response)
+                if (response.concernList.length > 0) {
+                    response.concernList.forEach(function(item) {
+                        let cardHtml = `
+                         <div class="card mb-2">
+                <a href="/admin/reports/v2?view=${item.concern_id}&category=concern">
+                    <div class="row no-gutters">
+                        <div class="col-md-4">
+                            <img src="${item.complainantImage}" width="100%" class="avatar-100 rounded" alt="applicant-profile">
+                        </div>
+                        <div class="col-md p-1">
+                            <div class="card-body p-2">
+                                <small class="text-primary fw-bolder">${item.complainant}</small>
+                                <br>
+                                <small class="text-muted fw-bolder">${item.main_concern}</small>
+                                <br>
+                                ${getStatusBadge(item.status)}
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+                        `
+                        $('.appointment-list').append(cardHtml);
+                    })
+                } else {
+                    $('.appointment-list').append(
+                        `<div class="card mt-2">
+                                <div class="row no-gutters">
+                                    <div class="col-md-4">
+
+                                    </div>
+                                    <div class="col-md p-1">
+                                        <div class="card-body p-2">
+                                            <small class="text-muted fw-bolder">NO DATA</small>
+                                           
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`
+                    )
+                }
+            })
+        })
+
+        function getStatusBadge(status) {
+            switch (status) {
+                case 1:
+                    return `<span class="badge bg-secondary">PENDING <i class="bi bi-hourglass-bottom text-white"></i></span>`;
+                case 2:
+                    return `<span class="badge bg-danger">CANCELLED <i class="bi bi-x-circle text-white"></i></span>`;
+                case 3:
+                    return `<span class="badge bg-success">APPROVED <i class="bi bi-check-circle text-white"></i></span>`;
+                case 4:
+                    return `<span class="badge bg-primary">COMPLETED <i class="bi bi-check-circle-fill text-white"></i></span>`;
+                default:
+                    return status;
+            }
+        }
+    </script>
 @endsection

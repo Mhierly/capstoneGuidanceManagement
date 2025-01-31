@@ -274,7 +274,7 @@ class AdminController extends Controller
     }
     function generateConcern(Request $request)
     {
-        $concernList = Concerns::where('status', 3)->get();
+        $concernList = Concerns::whereBetween('status', [3, 4])->orderBy('created_at', 'asc')->get();
         $pdf = PDF::loadView('pdf_layout.concernList', compact('concernList'));
         $pdf->setPaper([0, 0, 612.00, 1008.00], 'portrait');
         return $pdf->stream('concernList.pdf');

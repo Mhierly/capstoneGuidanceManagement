@@ -944,7 +944,12 @@ class FetchController extends Controller
     function fetcSearchStudent(Request $request)
     {
         try {
-            $studentsList = Student::where('firstname', 'like', '%' . $request->search . '%')->get();
+            $studentsList = Student::where('user_type', 2)
+                ->where(function ($query) use ($request) {
+                    $query->where('lastname', 'like', '%' . $request->search . '%')
+                        ->orWhere('firstname', 'like', '%' . $request->search . '%');
+                })
+                ->get();
             $studentList = [];
             foreach ($studentsList as $value) {
                 $studentList[] = [
@@ -975,5 +980,33 @@ class FetchController extends Controller
         }
 
         return $status;
+    }
+    function fetchConcerReportStudent(Request $request)
+    {
+        try {
+
+            $complainantList = Concerns::where('student_concern.status', $request->status)
+                ->join('students', 'student_concern.complainant_id', '=', 'students.id')
+                ->select('student_concern.id as concern_id', 'student_concern.main_concern', 'students.firstName', 'students.lastName', 'students.id', 'student_concern.status')
+                ->get();
+            $complainantList = Concerns::where('student_concern.status', $request->status)->get();
+            $concernList = [];
+
+            foreach ($complainantList as $value) {
+                $student = $value->student;
+
+                $concernList[] = [
+                    'concern_id'      => $value->id,
+                    'main_concern'    => $value->main_concern,
+                    'complainant'     => $student ? strtoupper($student->firstname . " " . $student->lastname) : 'Unknown',
+                    'complainantImage' => $student ? $student->studentProfile() : null,
+                    'status'          => $value->status
+                ];
+            }
+            return response(compact('concernList'), 200);
+            // return view('admin.studentListView', compact('studentList',));
+        } catch (\Throwable $th) {
+            return response(['error' => $th->getMessage()], 404);
+        }
     }
 }

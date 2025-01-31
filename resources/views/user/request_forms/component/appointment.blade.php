@@ -43,9 +43,18 @@
                             <td>{{ $item->created_at->format('F d, Y h:i a') }}</td>
                             <td>
                                 @if ($item->status != 1 && $item->status != 2)
-                                    @if ($item->appointment_date == null)
+                                    @if ($item->appointment_date != null || $item->appointment_time != null)
+                                        @php
+                                            // Combine the date and time
+                                            $appointmentDateTime =
+                                                $item->appointment_date . ' ' . $item->appointment_time;
+
+                                            // Create a DateTime instance from the string
+                                            $appointment = new DateTime($appointmentDateTime);
+                                        @endphp
                                         <span class="badge bg-success">
-                                            {{ $item->appointment_date }}
+                                            {{ $appointment->format('F d,Y') }} <br>
+                                            {{ $appointment->format('H:i a') }}
                                         </span>
                                     @else
                                         <span class="badge bg-secondary">PENDING <i

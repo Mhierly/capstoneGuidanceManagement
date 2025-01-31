@@ -50,18 +50,19 @@
     <div class="table-container">
         <table class="w-100">
             <tr>
-                <td>Name: <span id="complainant_name" style="width: 273px;">{{ $concern->complainant_name }}</span></td>
+                <td>Name: <span id="complainant_name" style="width: 273px;">{{ $concern->student->firstname }}</span></td>
                 <td>Signature: <span
                         style="text-decoration: underline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                 </td>
             </tr>
             <tr>
-                <td>Address: <span id="complainant_address" style="width: 260px;">{{ $concern->complainant_address }}</span>
+                <td>Address: <span id="complainant_address"
+                        style="width: 260px;">{{ $concern->student->fullAddress() }}</span>
                 </td>
             </tr>
             <tr>
                 <td>Contact no: <span id="complainant_contact"
-                        style="width: 242px;">{{ $concern->complainant_contact }}</span></td>
+                        style="width: 242px;">{{ $concern->student->contact_no }}</span></td>
             </tr>
             <tr>
                 <td>Relation to the Victim: <span id="relation_to_victim"

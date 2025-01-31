@@ -95,6 +95,17 @@ class Student extends Model
     {
         return DB::table('philippine_provinces')->where('province_code', $this->province)->first();
     }
+    function fullAddress()
+    {
+        $barangay = $this->barangay();
+        $municipality = $this->municipality();
+        $province = $this->province();
+        if ($barangay && $municipality && $province) {
+            return $this->house_no_street . " " . $barangay->barangay_description . ", " . $municipality->city_municipality_description . ", " . $province->province_description;
+        } else {
+            return "No Address";
+        }
+    }
 }
 
 

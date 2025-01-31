@@ -958,7 +958,22 @@ class FetchController extends Controller
             return response(compact('studentList'), 200);
             // return view('admin.studentListView', compact('studentList',));
         } catch (\Throwable $th) {
-            //throw $th;
+            return response(['error' => $th->getMessage()], 404);
         }
+    }
+    private function checkUserAvailability($id)
+    {
+        $student = Student::where('id', $id)->first();
+        $status = true;
+        if ($student) {
+            $attributes = collect($student->getAttributes())->except('middlename', 'student_img', 'suffix', 'lrn', 'elem_school');
+            if ($attributes->contains(function ($value) {
+                return is_null($value);
+            })) {
+                $status = false;
+            }
+        }
+
+        return $status;
     }
 }

@@ -154,6 +154,8 @@ Route::middleware(['auth', 'userAuth:1', 'preventBackHistory'])->group(function 
 
     // Teacher
     Route::post('/admin/Teacher/add', [AdminController::class, 'addTeacher'])->name('admin.teacher.add');
+    //Search Item
+    Route::get('fetch-search-student', [FetchController::class, 'fetcSearchStudent'])->name('fetch.studentSearch');
 });
 
 //STUDENTS
@@ -190,8 +192,6 @@ Route::middleware(['auth', 'userAuth:2', 'preventBackHistory'])->group(function 
     Route::get('fetch-user-drop-request', [FetchController::class, 'fetchDropRequest'])->name('fetch.user.drop.request');
     Route::get('fetch-user-gm-request', [FetchController::class, 'fetchGoodMoralRequest'])->name('fetch.user.gm.request');
 
-    //Search Item
-    Route::get('fetch-search-student',[FetchController::class,'fetcSearchStudent'])->name('fetch.studentSearch');
     //locations
     Route::get('/getProvinces', [AppController::class, 'getProvinces'])->name('fetch.user.location.provinces');
     Route::get('/getCities/{province_code}', [AppController::class, 'getCities'])->name('fetch.user.location.cities');

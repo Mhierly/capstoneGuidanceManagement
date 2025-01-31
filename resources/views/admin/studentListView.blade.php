@@ -153,7 +153,6 @@
                                 </div>
                             </div>
                         </div>
-                        </a>
                     </div>
                 @endforelse
             </div>
@@ -240,7 +239,62 @@
                     text: '{{ session('success_request') }}'
                 });
             @endif
-        })
+            $(document).on('keyup', '.searchStudent', function(evt) {
+                evt.preventDefault()
+                let search = $('.searchStudent').val();
+                $('.student-list').empty();
+
+                $.get('/fetch-search-student?search=' + search, function(response) {
+                    console.log(response.studentList);
+                    if (response.studentList.length > 0) {
+                        response.studentList.forEach(function(item) {
+                            let cardHtml = `
+            <div class="card mb-2">
+                <a href="/admin/students/v2?student=${item .id}&category=profile=">
+                    <div class="row no-gutters">
+                        <div class="col-md-4">
+                            <img src="${item.image}" width="100%" class="avatar-100 rounded" alt="applicant-profile">
+                        </div>
+                        <div class="col-md p-1">
+                            <div class="card-body p-2">
+                                <small class="text-primary fw-bolder">${item.name}</small>
+                                <br>
+                                <small class="text-muted fw-bolder">${item.email}</small>
+                                <br>
+                                ${getStatusBadge(item.status)}
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        `;
+
+                            $('.student-list').append(cardHtml);
+                        });
+                    } else {
+                        $('.student-list').append(
+                            `<div class="card mt-2">
+                                <div class="row no-gutters">
+                                    <div class="col-md-4">
+
+                                    </div>
+                                    <div class="col-md p-1">
+                                        <div class="card-body p-2">
+                                            <small class="text-muted fw-bolder">NO DATA</small>
+                                           
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`
+                        )
+                    }
+                });
+
+                console.log(search);
+            });
+
+
+        });
         $('#student_editor_modal').on('show.bs.modal', function(event) {
             var id = $(event.relatedTarget).data('id');
             $('#student_id').val(id);
@@ -276,6 +330,21 @@
         function validateLRN(input) {
             if (input.value.length > 12) {
                 input.value = input.value.slice(0, 12);
+            }
+        }
+
+        function getStatusBadge(status) {
+            switch (status) {
+                case 1:
+                    return `<span class="badge bg-secondary">PENDING <i class="bi bi-hourglass-bottom text-white"></i></span>`;
+                case 2:
+                    return `<span class="badge bg-danger">CANCELLED <i class="bi bi-x-circle text-white"></i></span>`;
+                case 3:
+                    return `<span class="badge bg-success">APPROVED <i class="bi bi-check-circle text-white"></i></span>`;
+                case 4:
+                    return `<span class="badge bg-primary">COMPLETED <i class="bi bi-check-circle-fill text-white"></i></span>`;
+                default:
+                    return status;
             }
         }
 
@@ -326,7 +395,8 @@
                             });
                         },
                         error: function(xhr, status, error) {
-                            var errorMessage = xhr.responseJSON && xhr.responseJSON.error ? xhr
+                            var errorMessage = xhr.responseJSON && xhr.responseJSON.error ?
+                                xhr
                                 .responseJSON.error :
                                 'There was an error processing your request.';
                             Swal.fire({
@@ -341,13 +411,6 @@
                     });
                 }
             });
-        });
-        $(document).on('keyup', '.searchStudent', function() {
-            let search = $('.searchStudent').val()
-            $.get(`{{ route('fetch.studentSearch', ['student' => ${search}]) }}`, function(response) {
-                console.log(response)
-            })
-            console.log(search)
         });
     </script>
 @endsection

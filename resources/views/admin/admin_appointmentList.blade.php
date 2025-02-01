@@ -105,7 +105,10 @@
 
             </div>
             <div class="col-md-4">
-                <small class="fw-bolder text-primary">APPOINTMENT REQUEST LIST</small>
+                <a class="btn btn-primary w-100 viewCalendar" data-bs-toggle="modal" data-bs-target="#viewCalendar">
+                    APPOINTMENT CALENDAR
+                </a>
+                <small class="fw-bolder text-primary mt-3">APPOINTMENT REQUEST LIST</small>
                 <div class="card">
                     <div class="card-body">
                         <small class="fw-bolder text-muted">STATUS</small>
@@ -118,7 +121,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="appointment-list">
+                <div class="appointment-list mt-3">
                     @forelse ($appointmentList as $item)
                         <div class="card mb-2">
                             <a
@@ -200,12 +203,25 @@
             </thead>
         </table> --}}
 
-        <div class="mt-5">
+        {{--  <div class="mt-5">
             <h3 class="text-center">Appointment Calendar</h3>
             <div id="calendar"></div>
+        </div> --}}
+    </div>
+    <div class="modal fade" id="viewCalendar" tabindex="-1" aria-labelledby="viewCalendarLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title fs-5 fw-bolder text-primary" id="viewCalendarLabel">APPOINTMENT CALENDAR</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="calendar"></div>
+                </div>
+            </div>
         </div>
     </div>
-
     @include('layouts.student_profile')
     @include('layouts.loading')
 
@@ -533,24 +549,6 @@
                     }
                 });
             });
-        });
-    </script>
-
-    @push('scripts')
-        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                var calendarEl = document.getElementById('calendar');
-                var calendar = new FullCalendar.Calendar(calendarEl, {
-                    initialView: 'timeGridWeek',
-                    slotMinTime: '8:00:00',
-                    slotMaxTime: '18:00:00',
-                    height: 'auto',
-                    events: @json($events),
-                });
-                calendar.render();
-
-            });
             $(document).on('change', '.select-status', function() {
                 let status = $('.select-status').val()
                 $('.appointment-list').empty();
@@ -621,22 +619,56 @@
                         return status;
                 }
             }
-        </script>
-        <script>
-            @if (session('error'))
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: '{{ session('error') }}'
+        });
+    </script>
+    <script>
+        @if (session('error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: '{{ session('error') }}'
+            });
+        @elseif (session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Request sent!',
+                text: '{{ session('success') }}'
+            });
+        @endif
+    </script>
+    <!-- FullCalendar JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.2.0/fullcalendar.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            let event = <?php echo json_encode($events); ?>;
+            console.log(event)
+            $('.viewCalendar').click(function() {
+                $('#calendar').fullCalendar({
+                    defaultView: 'agendaWeek',
+                    header: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'month,agendaWeek,agendaDay'
+                    },
+                    events: event,
+                    slotDuration: '01:00:00', // Set the slot duration to 1 hour
+                    slotLabelInterval: '01:00', // Show labels for every hour
+                    allDaySlot: false, // Disable the All Day slot
+                    minTime: '06:00:00',
+                    maxTime: '22:00:00',
+                    editable: true,
+                    droppable: true,
+                    height: 'auto',
+                    viewRender: function(view, element) {
+                        if (view.name === 'agendaWeek') {
+                            // This will hide the event data in the agendaWeek view
+                            $(element).find('.fc-event').hide();
+                        }
+                    }
                 });
-            @elseif (session('success'))
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Request sent!',
-                    text: '{{ session('success') }}'
-                });
-            @endif
-        </script>
-    @endpush
+            })
 
+        })
+    </script>
 @endsection

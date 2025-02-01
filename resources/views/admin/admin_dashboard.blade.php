@@ -130,39 +130,5 @@
                 }
             });
         })
-        /* document.addEventListener('DOMContentLoaded', function() {
-
-            event = [{
-                    "title": "Subject: Mental Health Issues",
-                    "start": "2025-02-01T00:29:00",
-                    "end": "2025-02-01T01:29:00"
-                },
-                {
-                    "title": "Subject: Academic Support",
-                    "start": "2025-02-01T00:32:00",
-                    "end": "2025-02-01T01:32:00"
-                },
-                {
-                    "title": "Subject: Academic Concerns",
-                    "start": "2025-02-01T00:30:00",
-                    "end": "2025-02-01T01:30:00"
-                },
-                {
-                    "title": "Subject: Appointment from student concern: \"Sample\"",
-                    "start": "2025-02-11T00:33:00",
-                    "end": "2025-02-11T01:33:00"
-                }
-            ]
-
-            var calendarEl = document.getElementById('calendar');
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'timeGridWeek',
-                slotMinTime: '08:00:00',
-                slotMaxTime: '18:00:00',
-                height: 'auto',
-                events: event,
-            });
-            calendar.render();
-        }); */
     </script>
 @endsection

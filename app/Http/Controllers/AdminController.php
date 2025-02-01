@@ -290,18 +290,23 @@ class AdminController extends Controller
 
         $events = [];
 
-        $appointments = DB::table('appointment_request')->where('status', '3')->get();
+        $appointments = DB::table('appointment_request')->whereBetween('status', [3, 4])->get();
 
         foreach ($appointments as $appointment) {
 
             $student = DB::table('students')->where('id', $appointment->student_id)->first();
             $name = $student->firstname . ' ' . $student->lastname;
+            $startDateTime = $appointment->appointment_date . ' ' . $appointment->appointment_time;
+            $startTime = new DateTime($startDateTime);        // Parse start time
+            $startDateTime = new DateTime($startDateTime);
+            $endTime = $startTime->modify('+1 hour');
             $events[] = [
-                'title' => 'Subject: ' . $appointment->subject . ' (' . ucwords($name) . ' - ' . $student->email . ')',
-                'start' => $appointment->appointment_date . ' ' . $appointment->appointment_time_from,
-                'end' => $appointment->appointment_date . ' ' . $appointment->appointment_time_to,
+                'title' => 'Subject: ' . $appointment->subject,
+                'start' => $startDateTime->format('Y-m-d\TH:i:s'),
+                'end' => $endTime->format('Y-m-d\TH:i:s'),
             ];
         }
+        //return $events;
         $appointmentList = Appointments::select('appointment_request.*')
             ->join('students', 'students.id', '=', 'appointment_request.student_id')
             ->where('appointment_request.status', 1)

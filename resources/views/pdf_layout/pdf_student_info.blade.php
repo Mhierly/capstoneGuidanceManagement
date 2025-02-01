@@ -88,8 +88,8 @@
 <body>
     <div class="profile-container">
         <div class="header">
-            <img src="{{ asset('img/logo.png') }}" alt="School Logo" style="float:left;">
-            <img src="{{ asset('img/logo2.png') }}" alt="Second Logo" style="float:right;">
+            <img src="{{ public_path('img/logo.png') }}" alt="School Logo" style="float:left;">
+            <img src="{{ public_path('img/logo2.png') }}" alt="Second Logo" style="float:right;">
             <h4>Republic of the Philippines</h4>
             <h4>Region III</h4>
             <h4>Division of Nueva Ecija</h4>

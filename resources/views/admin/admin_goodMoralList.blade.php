@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('title-page', 'Good Moral')
 @section('content')
     <div class="student-container shadow-lg">
         <div>

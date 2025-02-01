@@ -318,7 +318,7 @@
                     <div class="line"></div>
                     <div class="footer">
                         <div class="logo">
-                            <img src="{{ asset('img/logo.png') }}" alt="Logo" width="100px" height="100px">
+                            <img src="{{ public_path('img/logo.png') }}" alt="Logo" width="100px" height="100px">
                         </div>
                         <div class="contact-details">
                             <p><span>Address:</span> Sinipit, Bongabon, Nueva Ecija</p>

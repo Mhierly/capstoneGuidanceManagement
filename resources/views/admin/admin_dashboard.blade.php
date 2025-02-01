@@ -13,58 +13,67 @@
         }
     </style>
     <div class="container">
-        <h3 class="text-center mb-4">Dashboard</h3>
+        <p class="display-6 fw-bolder text-primary">DASHBOARD</p>
         <div class="row">
-            <div class="col-md">
-                <div class="card mb-4 shadow" title="Tracking the user accounts handled by administrator/counselors.">
-                    <div class="card-header text-white">User Accounts
-                        <i class="fas fa-question-circle float-end text-warning"
-                            title="Tracking the user accounts handled by administrator/counselors."></i>
+            <div class="col-md-12 col-lg-4 row">
+                <div class="col-lg-12 col-md-6">
+                    <div class="card mb-4 shadow" title="Tracking the user accounts handled by administrator/counselors.">
+                        <div class="card-header text-white">User Accounts
+                            <i class="fas fa-question-circle float-end text-warning"
+                                title="Tracking the user accounts handled by administrator/counselors."></i>
+                        </div>
+                        <div class="card-body">
+                            <h1 class="text-center">{{ $data['no_of_students'] }}</h1>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <h1 class="text-center">{{ $data['no_of_students'] }}</h1>
+                </div>
+                <div class="col-lg-12 col-md-6">
+                    <div class="card mb-4 shadow">
+                        <div class="card-header text-white">Number of Cases
+                            <i class="fas fa-question-circle float-end text-warning"
+                                title="Tracking the number of cases or incidents handled by administrators /counselors."></i>
+                        </div>
+                        <div class="card-body">
+                            <h1 class="text-center">{{ $data['no_of_cases'] }}</h1>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-6">
+                    <div class="card mb-4 shadow">
+                        <div class="card-header text-white">Number of Request Forms
+                            <i class="fas fa-question-circle float-end text-warning"
+                                title="Tracking the number of request forms handled by administrators/ counselors."></i>
+                        </div>
+                        <div class="card-body">
+                            <h1 class="text-center">{{ $data['no_of_request_forms'] }}</h1>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-6">
+                    <div class="card mb-4 shadow">
+                        <div class="card-header text-white">Completed Appointments
+                            <i class="fas fa-question-circle float-end text-warning"
+                                title="Tracking the completed appointments handled by administrators/ counselors."></i>
+                        </div>
+                        <div class="card-body">
+                            <h1 class="text-center">{{ $data['completed_appointments'] }}</h1>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md">
-                <div class="card mb-4 shadow">
-                    <div class="card-header text-white">Number of Cases
-                        <i class="fas fa-question-circle float-end text-warning"
-                            title="Tracking the number of cases or incidents handled by administrators /counselors."></i>
-                    </div>
-                    <div class="card-body">
-                        <h1 class="text-center">{{ $data['no_of_cases'] }}</h1>
+            <div class="col-md-12 col-lg">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="text-center text-white">Appointment Calendar</h3>
                     </div>
                 </div>
-            </div>
-            <div class="col-md">
-                <div class="card mb-4 shadow">
-                    <div class="card-header text-white">Number of Request Forms
-                        <i class="fas fa-question-circle float-end text-warning"
-                            title="Tracking the number of request forms handled by administrators/ counselors."></i>
-                    </div>
-                    <div class="card-body">
-                        <h1 class="text-center">{{ $data['no_of_request_forms'] }}</h1>
-                    </div>
+                <div class="card-body">
+                    <div id="calendar-appointment"></div>
                 </div>
             </div>
-            <div class="col-md">
-                <div class="card mb-4 shadow">
-                    <div class="card-header text-white">Completed Appointments
-                        <i class="fas fa-question-circle float-end text-warning"
-                            title="Tracking the completed appointments handled by administrators/ counselors."></i>
-                    </div>
-                    <div class="card-body">
-                        <h1 class="text-center">{{ $data['completed_appointments'] }}</h1>
-                    </div>
-                </div>
-            </div>
+        </div>
 
-        </div>
-        <div class="mt-5">
-            <h3 class="text-center">Appointment Calendar</h3>
-            <div id="calendar"></div>
-        </div>
+
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -90,22 +99,70 @@
         @endif
     </script>
 
-    @push('scripts')
-        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                var calendarEl = document.getElementById('calendar');
-                var calendar = new FullCalendar.Calendar(calendarEl, {
-                    initialView: 'timeGridWeek',
-                    slotMinTime: '8:00:00',
-                    slotMaxTime: '18:00:00',
-                    height: 'auto',
-                    events: @json($events),
-                });
-                calendar.render();
-
+    <!-- FullCalendar JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.2.0/fullcalendar.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            let event = <?php echo json_encode($events); ?>;
+            console.log(event)
+            $('#calendar-appointment').fullCalendar({
+                defaultView: 'agendaWeek',
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
+                },
+                events: event,
+                slotDuration: '01:00:00', // Set the slot duration to 1 hour
+                slotLabelInterval: '01:00', // Show labels for every hour
+                allDaySlot: false, // Disable the All Day slot
+                minTime: '06:00:00',
+                maxTime: '22:00:00',
+                editable: true,
+                droppable: true,
+                height: 'auto',
+                viewRender: function(view, element) {
+                    if (view.name === 'agendaWeek') {
+                        // This will hide the event data in the agendaWeek view
+                        $(element).find('.fc-event').hide();
+                    }
+                }
             });
-        </script>
-    @endpush
+        })
+        /* document.addEventListener('DOMContentLoaded', function() {
 
+            event = [{
+                    "title": "Subject: Mental Health Issues",
+                    "start": "2025-02-01T00:29:00",
+                    "end": "2025-02-01T01:29:00"
+                },
+                {
+                    "title": "Subject: Academic Support",
+                    "start": "2025-02-01T00:32:00",
+                    "end": "2025-02-01T01:32:00"
+                },
+                {
+                    "title": "Subject: Academic Concerns",
+                    "start": "2025-02-01T00:30:00",
+                    "end": "2025-02-01T01:30:00"
+                },
+                {
+                    "title": "Subject: Appointment from student concern: \"Sample\"",
+                    "start": "2025-02-11T00:33:00",
+                    "end": "2025-02-11T01:33:00"
+                }
+            ]
+
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'timeGridWeek',
+                slotMinTime: '08:00:00',
+                slotMaxTime: '18:00:00',
+                height: 'auto',
+                events: event,
+            });
+            calendar.render();
+        }); */
+    </script>
 @endsection

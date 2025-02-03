@@ -989,7 +989,7 @@ class FetchController extends Controller
                 ->join('students', 'student_concern.complainant_id', '=', 'students.id')
                 ->select('student_concern.id as concern_id', 'student_concern.main_concern', 'students.firstName', 'students.lastName', 'students.id', 'student_concern.status')
                 ->get();
-            $complainantList = Concerns::where('student_concern.status', $request->status)->orderBy('student_concern.created_at')->get();
+            $complainantList = Concerns::where('student_concern.status', $request->status)->orderBy('student_concern.created_at','desc')->get();
             $concernList = [];
 
             foreach ($complainantList as $value) {

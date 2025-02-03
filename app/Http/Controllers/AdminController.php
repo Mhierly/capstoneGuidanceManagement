@@ -254,7 +254,7 @@ class AdminController extends Controller
             ->select('student_concern.id as concern_id', 'student_concern.main_concern', 'students.firstName', 'students.lastName', 'students.id', 'student_concern.status')
             ->orderBy('student_concern.created_at')
             ->get();
-        $complainantList = Concerns::where('status', 1)->orderBy('student_concern.created_at')->with('student')->get();
+        $complainantList = Concerns::where('status', 1)->orderBy('student_concern.created_at', 'desc')->with('student')->get();
         $concernList = [];
 
         foreach ($complainantList as $value) {

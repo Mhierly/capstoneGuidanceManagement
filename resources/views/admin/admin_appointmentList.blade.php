@@ -183,31 +183,7 @@
             </div>
         </div>
     </div>
-    <div class="appointment-container">
-        {{-- <div>
-            <h3 class="text-center">Appointment List</h3>
-        </div>
-
-        <table id="appointmentList" class="display">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Status</th>
-                    <th>Student Name</th>
-                    <th>Date</th>
-                    <th>About</th>
-                    <th>Reason</th>
-                    <th>Requested On</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-        </table> --}}
-
-        {{--  <div class="mt-5">
-            <h3 class="text-center">Appointment Calendar</h3>
-            <div id="calendar"></div>
-        </div> --}}
-    </div>
+   
     <div class="modal fade" id="viewCalendar" tabindex="-1" aria-labelledby="viewCalendarLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">

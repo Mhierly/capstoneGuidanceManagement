@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\Mailer;
 use Exception;
 use Carbon\Carbon;
-
+use Barryvdh\DomPDF\Facade\Pdf;
 class RequestController extends Controller
 {
     protected function getStudentData($user_id)
@@ -144,6 +144,25 @@ class RequestController extends Controller
         } catch (\Throwable $th) {
             $error = ('Error inserting: ' . $th->getMessage());
             return redirect()->back()->with(['error_request' => $error]);
+        }
+    }
+    public function streamConcern(Request $request)
+    {
+        $concern = Concerns::find($request->concern);
+
+        if (!$concern) {
+            return response()->json(['error' => 'Concern not found.'], 404);
+        }
+
+        $filename = 'report_info.pdf';
+        try {
+            $pdf = PDF::loadView('pdf_layout.pdf_report_info_v2', compact('concern'));
+            $pdf->setPaper([0, 0, 612.00, 1008.00], 'portrait');
+            return $pdf->stream($filename);
+
+            return $pdf->download($filename);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to generate PDF: ' . $e->getMessage()], 500);
         }
     }
     public function submitDropRequest(Request $request)

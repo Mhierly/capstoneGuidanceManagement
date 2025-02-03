@@ -86,7 +86,7 @@ class ReportListController extends Controller
 
             $this->mailConcernUpdate($email_data, $student->email);
 
-            if ($complaint->hasAppointment == 0) {
+          /*   if ($complaint->hasAppointment == 0) {
                 $available_schedule = $this->checkAvailableSchedule();
 
                 $appointmentData = [
@@ -104,7 +104,7 @@ class ReportListController extends Controller
 
                 $appointment = Appointments::create($appointmentData);
                 $update_appointment_status = DB::table('student_concern')->where('id', $request->input('concern_id'))->update(['hasAppointment' => '1']);
-            }
+            } */
         } catch (Exception $e) {
             dd($e);
             return redirect()->back()->with('error_update', 'Processing action failed! Please try again.');

@@ -233,7 +233,9 @@
             <div class="col-md-4">
                 <label for="" class="text-muted fw-bolder">LIST OF CONCERN</label>
                 @forelse ($listConcern as $item)
-                    <div class="card mb-2">
+                    <div class="card mb-2 viewConcernModal" data-bs-toggle="modal" data-bs-target="#viewConcern"
+                        data-value="{{ $item->id }}"
+                        data-route="{{ route('user.ConcernStream', ['concern' => $item->id]) }}">
                         <div class="card-body">
                             <label for="" class="fw-bolder">{{ $item->victim_name }}</label> <br>
                             @if ($item->status === 1)
@@ -264,6 +266,21 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="viewConcern" tabindex="-1" aria-labelledby="viewConcernLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title fs-5" id="viewConcernLabel">STUDENT CONCERN</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <iframe src="" frameborder="0" class="reportConcern"
+                        style="width: 100%; height:1000px "></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
     <script>
         $(document).ready(function() {
             @if (session('error_request'))
@@ -291,6 +308,12 @@
                 var grade = $('#offender_grade').val();
                 fetchSections(grade, $('#offender_section'));
             });
+            $(document).on('click', '.viewConcernModal', function() {
+                var id = $(this).data('value');
+                var route = $(this).data('route')
+                console.log(route)
+                $(".reportConcern").attr("src", route);
+            })
         })
 
         function fetchSections(grade_id, select_section) {

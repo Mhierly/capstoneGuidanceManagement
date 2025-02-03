@@ -184,7 +184,8 @@ Route::middleware(['auth', 'userAuth:2', 'preventBackHistory'])->group(function 
     Route::post('user/request/report', [RequestController::class, 'submitReportRequest'])->name('user.request.report');
     // Request Forms Version 2
     Route::post('user/request/appointment', [RequestController::class, 'submitAppointmentRequestV2'])->name('user.request.appointment.v2');
-
+    Route::get('/user/request/stream', [RequestController::class, 'streamConcern'])->name('user.ConcernStream');
+    
     //cancel request
     Route::post('user/request/cancel', [RequestController::class, 'cancelRequest'])->name('user.request.cancel');
 

@@ -252,6 +252,7 @@ class AdminController extends Controller
         $complainantList = Concerns::where('status', 1)
             ->join('students', 'student_concern.complainant_id', '=', 'students.id')
             ->select('student_concern.id as concern_id', 'student_concern.main_concern', 'students.firstName', 'students.lastName', 'students.id', 'student_concern.status')
+            ->orderBy('student_concern.created_at')
             ->get();
         $complainantList = Concerns::where('status', 1)->with('student')->get();
         $concernList = [];

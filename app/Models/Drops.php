@@ -24,6 +24,6 @@ class Drops extends Model
 
     function counselor()
     {
-        return $this->belongsTo(User::class, 'counselor_id');
+        return $this->belongsTo(Counselors::class, 'counselor_id');
     }
 }

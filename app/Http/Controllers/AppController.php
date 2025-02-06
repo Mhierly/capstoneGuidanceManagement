@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Appointments;
 use App\Models\Concerns;
+use App\Models\Drops;
 use Illuminate\Http\Request;
 use App\Models\Student;
 use Illuminate\Support\Facades\Auth;
@@ -448,5 +449,31 @@ class AppController extends Controller
         $sections = DB::table('sections')->where('grade_id', $grade_id)->get();
 
         return response()->json($sections);
+    }
+    function viewAppointmentDetails(Request $request)
+    {
+        try {
+            $appointment = Appointments::where('appointment_id', $request->value)->first();
+            return response(compact('appointment'), 200);
+        } catch (\Throwable $th) {
+            return response(['error' => $th->getMessage()]);
+        }
+    }
+    function viewDropDetails(Request $request)
+    {
+        try {
+            $drop = Drops::where('drop_request_id', $request->id)->first();
+
+            $dropDetails = array(
+                'requestDate' => $drop->created_at->format('F d,y h:m'),
+                'returnDate' => $drop->request_date,
+                'reason' => $drop->reason,
+                'counselor' => $drop->counselor ? $drop->counselor->name : null,
+                'notes' => $drop->notes
+            );
+            return response(compact('dropDetails'), 200);
+        } catch (\Throwable $th) {
+            return response(['error' => $th->getMessage()]);
+        }
     }
 }

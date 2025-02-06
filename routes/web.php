@@ -185,7 +185,7 @@ Route::middleware(['auth', 'userAuth:2', 'preventBackHistory'])->group(function 
     // Request Forms Version 2
     Route::post('user/request/appointment', [RequestController::class, 'submitAppointmentRequestV2'])->name('user.request.appointment.v2');
     Route::get('/user/request/stream', [RequestController::class, 'streamConcern'])->name('user.ConcernStream');
-    
+
     //cancel request
     Route::post('user/request/cancel', [RequestController::class, 'cancelRequest'])->name('user.request.cancel');
 
@@ -203,4 +203,6 @@ Route::middleware(['auth', 'userAuth:2', 'preventBackHistory'])->group(function 
     Route::post('user/profile/edit', [ProfileSettingsController::class, 'profile_editor'])->name('student.profile.editor');
     Route::post('user/profile/edit/educational', [ProfileSettingsController::class, 'profile_editor2'])->name('student.profile.editor.educational');
     Route::post('user/profile/edit/v2', [ProfileSettingsController::class, 'profileEditor2'])->name('student.profile.editor.v2');
+    Route::get('user/appointment/details', [AppController::class, 'viewAppointmentDetails']);
+    Route::get('user/drop-details/details', [AppController::class, 'viewDropDetails']);
 });

@@ -21,4 +21,9 @@ class Drops extends Model
         'isActive',
         'counselor_id',
     ];
+
+    function counselor()
+    {
+        return $this->belongsTo(User::class, 'counselor_id');
+    }
 }

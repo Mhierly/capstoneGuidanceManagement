@@ -69,6 +69,18 @@
                                     <a class="badge bg-danger cancel_request" data-value="{{ $item->appointment_id }}">
                                         <i class="bi bi-x-circle" style="color: white;"> CANCEL <br> REQUEST </i>
                                     </a>
+                                @elseif($item->status === 3)
+                                    <a class="badge bg-primary appointmentDetailsFull" data-bs-toggle="modal"
+                                        data-bs-target="#appointmentDetailsFull"
+                                        data-value="{{ $item->appointment_id }}">
+                                        VIEW
+                                    </a>
+                                @elseif($item->status === 4)
+                                    <a class="badge bg-primary appointmentDetailsFull" data-bs-toggle="modal"
+                                        data-bs-target="#appointmentDetailsFull"
+                                        data-value="{{ $item->appointment_id }}">
+                                        VIEW
+                                    </a>
                                 @endif
 
 
@@ -124,3 +136,114 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="appointmentDetailsFull" tabindex="-1" aria-labelledby="appointmentDetailsFullLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title fs-5 fw-bolder text-primary" id="appointmentDetailsFullLabel">APPOINTMENT DETAILS</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md">
+                        <small class="fw-bolder text-muted">SUBJECT</small>
+                        <label for=""
+                            class="form-control form-control-sm border border-primary subject"></label>
+                    </div>
+                    <div class="col-md-4">
+                        <small class="fw-bolder text-muted">REQUEST DATE</small>
+                        <label for=""
+                            class="form-control form-control-sm border border-primary request-date"></label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <small class="fw-bolder text-muted">REASON</small>
+                        <label for=""
+                            class="form-control form-control-sm border border-primary reason"></label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md">
+                        <small class="fw-bolder text-muted">SCHEDULED DATE</small>
+                        <label for=""
+                            class="form-control form-control-sm border border-primary scheduled-date"></label>
+                    </div>
+                    <div class="col-md">
+                        <small class="fw-bolder text-muted">SCHEDULED TIME</small>
+                        <label for=""
+                            class="form-control form-control-sm border border-primary scheduled-time"></label>
+                    </div>
+                </div>
+                <label for="" class="mt-3 text-primary">COMPLETE APPOINTMENT</label>
+                <div class="row">
+                    <div class="col-md">
+                        <small class="fw-bolder text-muted">START SESSION</small>
+                        <label for=""
+                            class="form-control form-control-sm border border-primary scheduled-start-session"></label>
+                    </div>
+                    <div class="col-md">
+                        <small class="fw-bolder text-muted">END SESSION</small>
+                        <label for=""
+                            class="form-control form-control-sm border border-primary  scheduled-end-session"></label>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).on('click', '.appointmentDetailsFull', function() {
+        var id = $(this).data('value');
+        $('.appointmentInput').val(id);
+        $.get('/user/appointment/details?value=' + id, function(response) {
+            console.log(response)
+            if (response.appointment) {
+                let appointment = response.appointment
+                $('.subject').text(appointment.subject)
+                $('.request-date').text(convertDate(appointment.created_at))
+                $('.reason').text(appointment.subject)
+                $('.scheduled-date').text(appointment.appointment_date)
+                $('.scheduled-time').text(appointment.appointment_time)
+                $('.scheduled-start-session').text(appointment.appointment_time_from)
+                $('.scheduled-end-session').text(appointment.appointment_time_to)
+
+            }
+        })
+    })
+
+    function convertDate(date1) {
+        const date = new Date(date1);
+
+        if (isNaN(date.getTime())) {
+            return "Invalid Date"; // Handle incorrect inputs gracefully
+        }
+
+        // Define months array for conversion
+        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+        // Extract components
+        const month = months[date.getMonth()];
+        const day = date.getDate();
+        const year = date.getFullYear();
+
+        let hours = date.getHours();
+        const minutes = date.getMinutes().toString().padStart(2, "0"); // Ensure 2-digit format
+        const ampm = hours >= 12 ? "PM" : "AM";
+
+        // Convert to 12-hour format
+        hours = hours % 12 || 12;
+
+        // Format the final string
+        const formattedDate = `${month} ${day} ${year} ${hours}:${minutes} ${ampm}`;
+
+        console.log(formattedDate);
+        return formattedDate;
+    }
+</script>

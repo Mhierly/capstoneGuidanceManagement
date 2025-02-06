@@ -203,7 +203,7 @@ class AppointmentListController extends Controller
     function fetchAppointment(Request $request)
     {
         try {
-            $appointmentList1 = Appointments::where('status', $request->status)->get();
+            $appointmentList1 = Appointments::where('status', $request->status)->orderBy('appointment_id', 'desc')->get();
             $appointmentList = [];
             foreach ($appointmentList1 as $key => $appointment) {
                 $appointmentList[] = array(
